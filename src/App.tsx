@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useI18n, LOCALES, LocaleCode } from './i18n';
 import { 
   Building2, 
   Layers, 
@@ -21,7 +22,9 @@ import {
   Palette,
   Component,
   Server,
-  Code2
+  Code2,
+  Library,
+  Languages
 } from 'lucide-react';
 
 const IA_SECTIONS = [
@@ -353,8 +356,49 @@ const API_SECTIONS = [
   "143. Document Control & Revision History"
 ];
 
+const KNOWLEDGE_SECTIONS = [
+  "01. Document Control & Metadata",
+  "02. Executive Summary",
+  "03. Purpose",
+  "04. Scope",
+  "05. Core Architectural Principles",
+  "06. Trilingual Language Architecture (EN/AR/CKB)",
+  "07. RTL & LTR Layout Architecture (CSS Logical)",
+  "08. Enterprise Knowledge Hierarchy (14 Domains)",
+  "09. Document Identification System (IDG-SPEC-*)",
+  "10. Knowledge Frontmatter Standard (YAML)",
+  "11. Search Architecture (Full-Text & Semantic)",
+  "12. Knowledge Graph Architecture & Entities",
+  "13. Access Control & Classification Matrix",
+  "14. Auditability & Document Lineage (7-Yr)",
+  "15. Website & Portal Integration",
+  "16. Quality Metrics & Compliance Checklist",
+  "17. Document Control & Revision History"
+];
+
+const LOCALIZATION_SECTIONS = [
+  "01. Document Control & Metadata",
+  "02. Executive Summary",
+  "03. Purpose & Scope",
+  "04. Localization Principles",
+  "05. Canonical Locale Registry (BCP 47)",
+  "06. Language Selector UI Standard",
+  "07. Decoupled Translation Architecture",
+  "08. RTL / LTR Logical Mirroring Architecture",
+  "09. Enterprise Multilingual Typography",
+  "10. Technical Identifier Canonical Standard",
+  "11. Trilingual Parity & Fallback Engine",
+  "12. SEO hreflang & Localization Metadata",
+  "13. API Error Envelope Localization",
+  "14. Accessibility (WCAG 2.1 AA) & Screen Readers",
+  "15. Client Preference Persistence (idg.locale)",
+  "16. Quality Metrics & CI/CD Validation Gate",
+  "17. Document Control & Revision History"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy' | 'api'>('api');
+  const { locale, setLocale, t, isRTL } = useI18n();
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy' | 'api' | 'knowledge' | 'localization'>('localization');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -377,7 +421,11 @@ export default function App() {
     ? 'technical/repository-structure.md'
     : activeDoc === 'deploy'
     ? 'technical/deployment.md'
-    : 'technical/api-architecture.md';
+    : activeDoc === 'api'
+    ? 'technical/api-architecture.md'
+    : activeDoc === 'knowledge'
+    ? 'governance/knowledge-architecture.md'
+    : 'governance/localization-architecture.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -397,7 +445,11 @@ export default function App() {
     ? 'IDG-SPEC-REPO-2026-V1'
     : activeDoc === 'deploy'
     ? 'IDG-SPEC-DEPLOY-2026-V1'
-    : 'IDG-SPEC-API-2026-V1';
+    : activeDoc === 'api'
+    ? 'IDG-SPEC-API-2026-V1'
+    : activeDoc === 'knowledge'
+    ? 'IDG-SPEC-KNOWLEDGE-2026-V1'
+    : 'IDG-SPEC-LOCALIZATION-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -417,7 +469,11 @@ export default function App() {
     ? REPO_SECTIONS
     : activeDoc === 'deploy'
     ? DEPLOY_SECTIONS
-    : API_SECTIONS;
+    : activeDoc === 'api'
+    ? API_SECTIONS
+    : activeDoc === 'knowledge'
+    ? KNOWLEDGE_SECTIONS
+    : LOCALIZATION_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -457,8 +513,8 @@ export default function App() {
 
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
-          <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-10 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">{t('nav.active_spec')}</p>
+          <div className="grid grid-cols-12 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
               className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
@@ -569,6 +625,28 @@ export default function App() {
               <Code2 className="w-3 h-3 shrink-0" />
               <span>API</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('knowledge'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'knowledge'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Library className="w-3 h-3 shrink-0" />
+              <span>Know</span>
+            </button>
+            <button
+              onClick={() => { setActiveDoc('localization'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'localization'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Languages className="w-3 h-3 shrink-0" />
+              <span>i18n</span>
+            </button>
           </div>
         </div>
 
@@ -576,7 +654,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : activeDoc === 'deploy' ? 'Deployment Architecture (53 Sec)' : 'API Architecture (143 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : activeDoc === 'deploy' ? 'Deployment Architecture (53 Sec)' : activeDoc === 'api' ? 'API Architecture (143 Sec)' : activeDoc === 'knowledge' ? 'Knowledge Architecture (17 Sec)' : 'Localization Architecture (17 Sec)'}
             </p>
           </div>
 
@@ -642,20 +720,58 @@ export default function App() {
               <span className="text-slate-900 font-semibold">{currentFile.split('/')[1]}</span>
             </div>
             <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-mono font-bold border border-indigo-200/80">
-              {activeDoc === 'ia' ? 'PATCH 003' : activeDoc === 'nav' ? 'PATCH 004' : 'PATCH 005'}
+              {activeDoc === 'ia' ? 'PATCH 003' : activeDoc === 'nav' ? 'PATCH 004' : activeDoc === 'cts' ? 'PATCH 005' : activeDoc === 'seo' ? 'PATCH 006' : activeDoc === 'ds' ? 'PATCH 007' : activeDoc === 'cmp' ? 'PATCH 008' : activeDoc === 'docgov' ? 'PATCH 009' : activeDoc === 'repo' ? 'PATCH 010' : activeDoc === 'deploy' ? 'PATCH 011' : activeDoc === 'api' ? 'PATCH 013' : activeDoc === 'knowledge' ? 'PATCH 014' : 'PATCH 015'}
             </span>
             <span className="hidden sm:inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded text-[10px] font-mono font-bold border border-emerald-200/80">
-              APPROVED
+              {t('nav.status_approved')}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Language Selector Control */}
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200/90 shadow-2xs">
+              <Languages className="w-3.5 h-3.5 text-slate-500 mx-1 shrink-0" />
+              <button
+                onClick={() => setLocale('en-US')}
+                aria-label="Switch to English"
+                className={`px-2 py-1 text-[11px] font-bold rounded transition ${
+                  locale === 'en-US'
+                    ? 'bg-indigo-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLocale('ar-IQ')}
+                aria-label="Switch to Arabic"
+                className={`px-2 py-1 text-[11px] font-bold rounded transition ${
+                  locale === 'ar-IQ'
+                    ? 'bg-indigo-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
+              >
+                ع
+              </button>
+              <button
+                onClick={() => setLocale('ckb-IQ')}
+                aria-label="Switch to Kurdish Sorani"
+                className={`px-2 py-1 text-[11px] font-bold rounded transition ${
+                  locale === 'ckb-IQ'
+                    ? 'bg-indigo-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
+              >
+                کوردی
+              </button>
+            </div>
+
             <button
               onClick={handleCopy}
               className="px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-300 rounded-md hover:bg-slate-50 flex items-center gap-1.5 transition shadow-2xs"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
-              <span>{copied ? 'Copied' : 'Copy Spec Markdown'}</span>
+              <span>{copied ? t('nav.copied') : t('nav.copy_spec')}</span>
             </button>
 
             <a
@@ -664,7 +780,7 @@ export default function App() {
               rel="noreferrer"
               className="px-3 py-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-xs flex items-center gap-1.5 transition"
             >
-              <span>View Markdown</span>
+              <span>{t('common.preview')}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -691,55 +807,63 @@ export default function App() {
                         {docId}
                       </span>
                       <span className="text-[10px] text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded font-mono border border-emerald-500/30">
-                        Authoritative Corporate Standard
+                        {t('nav.classification')}
                       </span>
                     </div>
                     <h2 className="text-xl font-bold text-white tracking-tight">
                       {activeDoc === 'ia' 
-                        ? 'IDG Enterprise Information Architecture Specification' 
+                        ? t('title.ia')
                         : activeDoc === 'nav'
-                        ? 'IDG Enterprise Navigation Architecture Specification'
+                        ? t('title.nav')
                         : activeDoc === 'cts'
-                        ? 'IDG Enterprise Website Content & Localization Strategy'
+                        ? t('title.cts')
                         : activeDoc === 'seo'
-                        ? 'IDG Enterprise SEO & Discoverability Architecture Specification'
+                        ? t('title.seo')
                         : activeDoc === 'ds'
-                        ? 'IDG Enterprise Design System Architecture Specification'
+                        ? t('title.ds')
                         : activeDoc === 'cmp'
-                        ? 'IDG Enterprise Component Library Architecture Specification'
+                        ? t('title.cmp')
                         : activeDoc === 'docgov'
-                        ? 'IDG Enterprise Documentation Governance Specification'
+                        ? t('title.docgov')
                         : activeDoc === 'repo'
-                        ? 'IDG Enterprise Repository Structure Standard'
+                        ? t('title.repo')
                         : activeDoc === 'deploy'
-                        ? 'IDG Enterprise Deployment & Infrastructure Standard'
-                        : 'IDG Enterprise API Architecture Specification'}
+                        ? t('title.deploy')
+                        : activeDoc === 'api'
+                        ? t('title.api')
+                        : activeDoc === 'knowledge'
+                        ? t('title.knowledge')
+                        : t('title.localization')}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
-                        ? 'Governing corporate holding authority, Product 001 (AI Gate Iraq), multi-site topologies, taxonomy, and AI knowledge graph readiness.'
+                        ? t('desc.ia')
                         : activeDoc === 'nav'
-                        ? 'Governing global navigation, primary header hierarchies, product navigation models, mega menus, accessibility, and 10-year scalability.'
+                        ? t('desc.nav')
                         : activeDoc === 'cts'
-                        ? 'Governing corporate tone, trilingual localization (English, Arabic, Kurdish Sorani), page specifications, SEO rules, and translation governance.'
+                        ? t('desc.cts')
                         : activeDoc === 'seo'
-                        ? 'Governing enterprise search infrastructure, JSON-LD schemas, multilingual hreflang routing, robots AI directives, and Answer Engine Optimization (AEO/GEO).'
+                        ? t('desc.seo')
                         : activeDoc === 'ds'
-                        ? 'Governing design tokens, trilingual typography, atomic UI component specifications, WCAG 2.2 AA accessibility, and RTL layout mirroring.'
+                        ? t('desc.ds')
                         : activeDoc === 'cmp'
-                        ? 'Governing atomic component hierarchy, Tier 1-4 UI specs, bi-directional logic, WCAG 2.2 AA accessibility, and developer rules.'
+                        ? t('desc.cmp')
                         : activeDoc === 'docgov'
-                        ? 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'
+                        ? t('desc.docgov')
                         : activeDoc === 'repo'
-                        ? 'Governing 15 repository taxonomies, folder layouts, GitFlow branching, Conventional Commits, CODEOWNERS, and CI/CD pipelines.'
+                        ? t('desc.repo')
                         : activeDoc === 'deploy'
-                        ? 'Governing 7 environments, Cloudflare / GCP / Firebase cloud mesh, DevSecOps pipelines, 10 infrastructure layers, and HA / DR topologies.'
-                        : 'Governing OpenAPI 3.1 contracts, zero-trust security, OAuth 2.0/OIDC, trilingual error models, rate limiting, and 75 enterprise API sections.'}
+                        ? t('desc.deploy')
+                        : activeDoc === 'api'
+                        ? t('desc.api')
+                        : activeDoc === 'knowledge'
+                        ? t('desc.knowledge')
+                        : t('desc.localization')}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : activeDoc === 'deploy' ? '450+ Lines' : '500+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : activeDoc === 'deploy' ? '450+ Lines' : activeDoc === 'api' ? '500+ Lines' : '250+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -931,7 +1055,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">99.95% HA SLA, &lt;5min RPO / &lt;15min RTO, zero-trust network isolation, GCP Secret Manager, 4 Golden Signals APM, and FinOps governance.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'api' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise API Architecture Specification</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-API-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -942,6 +1066,32 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Bearer JWTs, fine-grained scopes, mTLS inter-service auth, HMAC webhook signatures, Cloudflare WAF rate limiting.</p>
                       <p className="text-slate-200 font-semibold mt-2">3. TRILINGUAL ERROR MODEL &amp; LOCALIZATION</p>
                       <p className="text-slate-400 text-[11px]">Canonical error response envelope featuring localized messages (en-US, ar-IQ, ckb-IQ), request_id tracing, and docs URL references.</p>
+                    </div>
+                  </div>
+                ) : activeDoc === 'knowledge' ? (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Knowledge Architecture Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-KNOWLEDGE-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. TRILINGUAL KNOWLEDGE PARITY (EN / AR / CKB)</p>
+                      <p className="text-slate-400 text-[11px]">Mandatory day-one localization for English (en-US), Arabic (ar-IQ), and Kurdish Sorani (ckb-IQ) across all 14 knowledge domains.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. CSS LOGICAL PROPERTIES &amp; RTL LAYOUT MIRRORING</p>
+                      <p className="text-slate-400 text-[11px]">Strict physical property ban (margin-left, text-align: left). Full adoption of logical properties and directional icon flipping.</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. SEARCH, KNOWLEDGE GRAPH &amp; AUDIT LINEAGE</p>
+                      <p className="text-slate-400 text-[11px]">Hybrid lexical (BM25) and dense vector semantic search, JSON-LD knowledge graph indexing, and 7-year regulatory audit preservation.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Localization &amp; Language Architecture Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-LOCALIZATION-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. CANONICAL BCP 47 LOCALE REGISTRY &amp; UI SELECTOR</p>
+                      <p className="text-slate-400 text-[11px]">Day-One production support for English (en-US), Arabic (ar-IQ), and Kurdish Sorani (ckb-IQ) with durable preference persistence in localStorage (idg.locale).</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. RTL &amp; LTR LAYOUT MIRRORING &amp; CSS LOGICAL PROPERTIES</p>
+                      <p className="text-slate-400 text-[11px]">Dynamic document.documentElement.dir updating with strict physical CSS bans, directional icon flipping, and LTR code block protection.</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. DECOUPLED TRANSLATION &amp; FALLBACK ENGINE</p>
+                      <p className="text-slate-400 text-[11px]">Zero hardcoded UI strings, ckb-IQ -&gt; ar-IQ -&gt; en-US fallback chain, untranslated technical canonical identifiers, and hreflang SEO architecture.</p>
                     </div>
                   </div>
                 )}
