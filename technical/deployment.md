@@ -1,328 +1,473 @@
-# Iraq Digital Gateway (IDG) Enterprise Deployment & Infrastructure Standard
+# Iraq Digital Gateway (IDG) Enterprise Deployment Architecture Specification
 
-## Document Identification
+# 1. Document Control
 - **Document Identifier**: IDG-SPEC-DEPLOY-2026-V1
 - **Parent Organization**: Iraq Digital Gateway (IDG)
 - **Primary Product Reference**: AI Gate Iraq (Product 001)
-- **Related Specifications**: IDG-SPEC-REPO-2026-V1, IDG-SPEC-DOCGOV-2026-V1, IDG-SPEC-IA-2026-V1, IDG-SPEC-NAV-2026-V1, IDG-SPEC-CTS-2026-V1, IDG-SPEC-SEO-2026-V1, IDG-SPEC-DS-2026-V1, IDG-SPEC-CMP-2026-V1
-- **Status**: Production Approved
-- **Classification**: Enterprise Restricted
+- **Classification**: Enterprise Restricted / Public Architecture Blueprint
 - **Effective Date**: 2026-08-07
-- **Review Cycle**: Annual mandatory audit or upon deployment of new cloud regions or sovereign datacenters
+- **Owner**: IDG Enterprise Infrastructure & Platform Architecture Board
+- **Approved By**: Chief Technology Officer & Principal DevOps Architect
+- **ISO / Regulatory Alignment**: ISO/IEC 27001:2022 (Control A.8.9 Configuration Management), SOC 2 Type II, ISO 9001:2015
+- **Related Specifications**: IDG-SPEC-REPO-2026-V1, IDG-SPEC-DOCGOV-2026-V1, IDG-SPEC-IA-2026-V1, IDG-SPEC-NAV-2026-V1, IDG-SPEC-CTS-2026-V1, IDG-SPEC-SEO-2026-V1, IDG-SPEC-DS-2026-V1, IDG-SPEC-CMP-2026-V1
 
 ---
 
-# 1. Deployment Philosophy & Core Principles
+# 2. Purpose and Scope
+This specification defines the mandatory, permanent Enterprise Deployment Architecture governing all software applications, microservices, cloud infrastructure, edge networks, databases, AI gateways, and developer tools across the entire Iraq Digital Gateway (IDG) ecosystem.
 
-The Iraq Digital Gateway (IDG) Enterprise Deployment & Infrastructure Standard defines the architectural specifications, automated CI/CD deployment pipelines, multi-cloud hosting paradigms, zero-trust security postures, disaster recovery protocols, and observability standards governing all digital assets across the IDG enterprise ecosystem.
-
-This specification serves as the permanent constitutional infrastructure standard across all IDG properties, including IDG Corporate Holding (`idg.global`), AI Gate Iraq (`aigate.iq`), future product domains (`Product 002+`), sovereign government platforms, and developer API gateways.
-
-## 1.1 Fundamental Engineering Tenets
-1. **Immutable Infrastructure as Code (IaC)**: Every server, container, networking rule, DNS record, firewall policy, and cloud service configuration MUST be declared declaratively using Terraform or OpenTofu within version-controlled repositories (`idg-infra-*`). Manual configuration in cloud web consoles is strictly prohibited.
-2. **Zero-Downtime Continuous Deployment**: All production deployments MUST execute without service interruption, utilizing automated traffic shifting, health checks, canary verification, and instant rollback capabilities.
-3. **Data Sovereignty & Regulatory Compliance**: Infrastructure topologies enforce strict regional residency bounds for citizen data, regulatory logs, and security credentials, ensuring full compliance with Iraqi sovereign data protection mandates and ISO/IEC 27001 standards.
-4. **Shift-Left Security & Automated DevSecOps**: Security validation—including static analysis (SAST), software bill of materials (SBOM) scanning, secret leak detection, and container image vulnerability scans—is embedded directly into every deployment pipeline prior to artifact production.
-5. **Bi-Directional CDN Edge Pre-Rendering**: Edge caching and delivery infrastructure are natively optimized to serve trilingual content (English, Arabic, Kurdish Sorani) with optical layout parity and sub-50ms latency across domestic Iraqi ISP networks and international transit hubs.
+The scope covers IDG Corporate Systems (`idg.global`), AI Gate Iraq (Product 001: `aigate.iq`), shared internal enterprise services, third-party developer SDKs, sovereign government portals, and future product additions (`Product 002` through `Product 500+`). This standard establishes strict implementation rules for local development, automated CI/CD pipelines, staging validation, zero-downtime production rollouts, disaster recovery failover, and multi-cloud infrastructure orchestration.
 
 ---
 
-# 2. Environment Strategy & Separation Model
+# 3. Deployment Architecture Principles
+1. **Immutable Infrastructure as Code (IaC)**: All cloud environments, network configurations, serverless resources, container runtimes, WAF rules, and DNS records MUST be provisioned declaratively via version-controlled Terraform/OpenTofu code (`idg-infra-*`). Manual configuration via cloud web consoles is strictly prohibited in non-sandbox environments.
+2. **Zero-Downtime Continuous Deployment (ZDCD)**: Production deployments MUST execute without service disruption, utilizing progressive traffic shifting, health checks, automated canary evaluation, and instant rollback mechanisms.
+3. **Shift-Left DevSecOps Governance**: Security validation—including static analysis (SAST), software bill of materials (SBOM) scanning, secret leak detection, container vulnerability audits, and license compliance—is embedded directly into every automated pipeline prior to artifact release.
+4. **Data Sovereignty & Local Isolation**: Customer, citizen, and regulatory data MUST abide by strict regional residency boundaries within sovereign Iraqi datacenters or designated regional cloud zones (`me-central1`), complying fully with national privacy mandates and ISO/IEC 27001 requirements.
+5. **Trilingual Edge Pre-Rendering**: Edge infrastructure natively serves trilingual content (English `en-US`, Arabic `ar-IQ`, Kurdish Sorani `ckb-IQ`) with sub-50ms latency, optical layout parity, and automatic RTL/LTR directionality handling.
 
-IDG mandates strict physical and logical isolation across seven discrete operational environments. Cross-environment credential reuse or direct data transfers between non-production and production zones are strictly prohibited.
+---
+
+# 4. IDG Enterprise Deployment Model
+IDG operates a hybrid multi-cloud deployment model engineered for multi-tenant scalability, high availability, and sovereign government integration:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ IDG ENTERPRISE ENVIRONMENT ISOLATION MATRIX                             │
+│ IDG ENTERPRISE HYBRID DEPLOYMENT MESH                                    │
 └─────────────────────────────────────────────────────────────────────────┘
-  ├── 1. Sandbox      (Local Developer Containers & Mock Services)
-  ├── 2. Development  (Feature Branch Integration & Feature Flag Testing)
-  ├── 3. Testing      (Automated Unit, Integration & API Test Runner)
-  ├── 4. QA / UAT     (Quality Assurance & Trilingual UX Validation)
-  ├── 5. Staging      (Production-Identical Replicated Environment)
-  ├── 6. Production   (High-Availability Live Sovereign Operations)
-  └── 7. Disaster Rec (Active-Passive Secondary Region Replication Node)
+  ├── Edge Layer        : Cloudflare Enterprise Anycast DNS, WAF, CDN, Workers
+  ├── Primary Compute   : Google Cloud Platform (Cloud Run Container Runtimes)
+  ├── Serverless & Auth : Firebase Enterprise (Firestore DB, Firebase Auth, GCS)
+  ├── AI Services Layer : GCP Vertex AI Gateway (Gemini 1.5 Pro/Flash Orchestration)
+  └── Sovereign Cloud   : On-Premise Sovereign Kubernetes (GKE Enterprise / Air-Gapped)
 ```
 
-## 2.1 Detailed Environment Parameters
+The architecture distinguishes between three runtime states:
+- **CURRENT ARCHITECTURE**: Production deployments run containerized Node.js/Express microservices on GCP Cloud Run behind Cloudflare Enterprise WAF/CDN, utilizing Firebase Authentication and Cloud SQL (PostgreSQL).
+- **STANDARD ARCHITECTURE**: Standardized automated GitHub Actions pipelines enforcing 9 quality gates, zero-downtime canary traffic shifting (10% → 25% → 50% → 100%), and Secret Manager environment injection.
+- **FUTURE ARCHITECTURE**: Multi-region active-active deployment across Middle East cloud zones (`me-central1` & `me-west1`) paired with on-premise sovereign Iraqi government Kubernetes clusters for sovereign data isolation.
 
-| Environment Name | Purpose & Operational Scope | Domain Naming Pattern | Database Isolation Tier | Deployment Trigger |
+---
+
+# 5. Environment Architecture
+IDG enforces seven strictly isolated operational environments. Cross-environment credential reuse, direct shared databases, or manual hot-patching between non-production and production zones are strictly forbidden.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ IDG SEVEN-TIER ENVIRONMENT SEPARATION MATRIX                            │
+└─────────────────────────────────────────────────────────────────────────┘
+  [1. Local] ──► [2. Dev] ──► [3. Test] ──► [4. QA/UAT] ──► [5. Staging] ──► [6. Prod]
+                                                                                │
+                                                                                ▼
+                                                                        [7. Disaster Rec]
+```
+
+## 5.1 Local Environment
+- **Purpose**: Local engineer prototyping, debugging, and unit test execution.
+- **Infrastructure**: Docker Desktop / OrbStack, local synthetic mocks, SQLite or local Dockerized PostgreSQL.
+- **Domain Access**: `localhost:3000` or `*.sandbox.idg.internal`.
+
+## 5.2 Development Environment (`dev`)
+- **Purpose**: Continuous integration testing of `feature/*` branches merged into `develop`.
+- **Infrastructure**: Shared serverless Cloud Run instance (`min-instances: 0`), development Firestore/PostgreSQL database populated with sanitized mock data.
+- **Domain Access**: `dev.idg.global` / `dev.aigate.iq`.
+
+## 5.3 Testing Environment (`test`)
+- **Purpose**: Automated execution of integration, API contract, and performance regression suites.
+- **Infrastructure**: Ephemeral test environments provisioned per pull request and destroyed upon PR closure.
+- **Domain Access**: Ephemeral `pr-[PR_NUMBER].test.idg.internal`.
+
+## 5.4 QA / UAT Environment (`qa`)
+- **Purpose**: Business stakeholder acceptance, accessibility verification, and trilingual RTL/LTR UX audit.
+- **Infrastructure**: Persistent staging replica populated with anonymized sample records.
+- **Domain Access**: `qa.idg.global` / `qa.aigate.iq`.
+
+## 5.5 Staging Environment (`stage`)
+- **Purpose**: Production-identical pre-release validation, performance load testing, and security penetration audits.
+- **Infrastructure**: Replicated production topology (`min-instances: 1`), read-replica or dedicated staging database instance.
+- **Domain Access**: `stage.idg.global` / `stage.aigate.iq`.
+
+## 5.6 Production Environment (`prod`)
+- **Purpose**: Live mission-critical business transactions, customer traffic, and sovereign government API exchanges.
+- **Infrastructure**: High-availability multi-zone GCP Cloud Run (`min-instances: 2`), Cloud SQL PostgreSQL primary + multi-AZ standby, Cloudflare Enterprise CDN.
+- **Domain Access**: `idg.global` / `aigate.iq`.
+
+## 5.7 Disaster Recovery Environment (`dr`)
+- **Purpose**: Active-passive standby node in a geographically distinct secondary region (`me-central1`).
+- **Infrastructure**: Replicated compute configurations, continuous WAL database replication, automated DNS failover probes.
+- **Domain Access**: `dr.idg.global` / `dr.aigate.iq`.
+
+---
+
+# 6. Application Deployment Architecture
+All applications within IDG are packaged as immutable, multi-stage OCI-compliant Docker container images. Applications MUST compile frontend assets, bind backend API routes to port 3000, handle standard Unix signals (`SIGTERM`, `SIGINT`), and expose standard health check endpoints (`/api/health`).
+
+---
+
+# 7. Frontend Deployment
+- **Compilation Engine**: React 18+ with Vite, compiled into optimized static production bundles inside `dist/`.
+- **Distribution Strategy**: Static bundle assets (JS, CSS, WebP, WOFF2) are published to Cloudflare Pages / GCP Bucket Storage with immutable cache headers (`Cache-Control: public, max-age=31536000, immutable`).
+- **Trilingual Localized Bundling**: Localized translations (`en-US`, `ar-IQ`, `ckb-IQ`) are bundled with logical directionality CSS (`margin-inline-start`, `inset-inline-end`) ensuring RTL layouts render cleanly without visual shifts.
+
+---
+
+# 8. Backend Deployment
+- **Runtime Environment**: Node.js 20+ LTS executing compiled Express CommonJS bundles (`dist/server.cjs`) packaged via `esbuild`.
+- **Process Management**: Native Node process execution within containerized Cloud Run runtimes.
+- **Concurrency & Ports**: Containers bind strictly to host port `3000` and `0.0.0.0` address, accepting HTTP/2 and gRPC streams from upstream ingress proxies.
+
+---
+
+# 9. API Deployment
+- **Gateway Topography**: Centralized routing via GCP Cloud Run Ingress & Cloudflare API Gateway.
+- **Interface Standards**: RESTful JSON endpoints (`/api/v1/*`) and gRPC protocols for internal service-to-service communication.
+- **Rate Limiting & Protection**: Cloudflare WAF rate limiting enforces 100 requests/minute per client IP on public API endpoints, shielding backend microservices from denial-of-service spikes.
+
+---
+
+# 10. Database and Data Deployment
+- **Relational Databases**: Fully managed Cloud SQL PostgreSQL 16+ with automated high-availability failover across 3 Availability Zones.
+- **Document Store**: Firebase Firestore operating in Multi-Region mode with real-time replication.
+- **Object Storage**: Firebase Storage / Google Cloud Storage buckets configured with Object Versioning, Uniform Bucket-Level Access, and CMEK (Customer-Managed Encryption Keys).
+
+---
+
+# 11. Cloud Infrastructure Deployment
+- **Primary Cloud Provider**: Google Cloud Platform (GCP) project hierarchy (`idg-corp-prod`, `idg-aigate-prod`, `idg-shared-prod`).
+- **Provisioning Tooling**: Terraform v1.8+ with remote state stored in version-controlled GCS buckets enforcing State Locking via Cloud KMS.
+- **Drift Detection**: Scheduled daily GitHub Actions workflows run `terraform plan -detailed-exitcode` to detect and alert on unauthorized infrastructure alterations.
+
+---
+
+# 12. CDN and Edge Deployment
+- **Edge Provider**: Cloudflare Enterprise Anycast CDN.
+- **Edge Functions**: Cloudflare Workers perform dynamic geographic routing, trilingual header parsing, JWT token validation, and instant maintenance mode injection.
+- **Cache Optimization**: Tiered Caching enabled with Argo Smart Routing reducing origin latency across Iraqi telecom networks by up to 40%.
+
+---
+
+# 13. DNS and Domain Deployment
+- **DNS Infrastructure**: Cloudflare Managed Anycast DNS with DNSSEC enforcement.
+- **Domain Taxonomy**:
+  - `idg.global`: Corporate Holding Main Portal.
+  - `aigate.iq`: Product 001 (AI Gate Iraq) Primary Portal.
+  - `api.idg.global` & `api.aigate.iq`: Primary API Endpoints.
+  - `docs.idg.global`: Enterprise Architecture Documentation Hub.
+
+---
+
+# 14. CI/CD Architecture
+IDG CI/CD pipelines automate code validation, container artifact creation, security audits, and deployment execution via standardized GitHub Actions workflow templates stored in `.github/workflows/`.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ IDG NINE-STAGE CONTINUOUS INTEGRATION & DEPLOYMENT FLOW                 │
+└─────────────────────────────────────────────────────────────────────────┘
+  Developer Push ──► [1. Lint & Format Check] ──► [2. Typecheck (tsc)]
+                            │
+                            ▼
+  [4. Security & Secret Scan] ◄── [3. Unit & Integration Tests]
+            │
+            ▼
+  [5. Container Artifact Build] ──► [6. Staging Smoke Test]
+                                           │
+                                           ▼
+  [9. APM Telemetry Monitor] ◄── [8. Canary Traffic Shift] ◄── [7. Prod Deploy]
+```
+
+---
+
+# 15. GitHub Actions Deployment Pipeline
+Standardized workflows mandated across all repositories:
+1. `ci-validation.yml`: Runs linting, typechecking, unit tests, and i18n checks on every PR.
+2. `security-audit.yml`: Executes Gitleaks secret scan, CodeQL SAST, Snyk dependency check, and Trivy container analysis.
+3. `cd-staging.yml`: Deploys merged code from `develop` to Staging environment automatically.
+4. `cd-production.yml`: Tagged releases on `main` trigger canary deployment to Production environment.
+
+---
+
+# 16. Build and Release Process
+- **Build Execution**: `npm run build` compiles Vite frontend assets and bundles server code into `dist/server.cjs`.
+- **Docker Multi-Stage Build**:
+  - *Stage 1 (Builder)*: Installs full dependencies, compiles TypeScript.
+  - *Stage 2 (Runner)*: Copies compiled `dist/` and production dependencies into a lightweight Node Alpine image (`node:20-alpine`).
+
+---
+
+# 17. Branch-to-Environment Mapping
+| Git Branch Pattern | Target Environment | Deployment Mode | Approval Requirement |
+| :--- | :--- | :--- | :--- |
+| `feature/*` / `bugfix/*` | Test (Ephemeral) | Automated on PR | PR Reviewer Assignment |
+| `develop` | Development | Automated on Push | 1 CODEOWNER Approval |
+| `release/*` | Staging / QA | Automated on Branch | Tech Lead Approval |
+| `main` | Production | Tag-Triggered Canary | 2 CODEOWNERS + Security Approval |
+| `hotfix/*` | Production / Staging | Fast-Track Pipeline | CTO / VP Engineering Approval |
+
+---
+
+# 18. Deployment Approval Model
+- **Non-Production (`dev`/`test`)**: Fully automated; no human gatekeepers required.
+- **Staging (`stage`)**: Automated upon merging release pull request.
+- **Production (`prod`)**: Requires mandatory digital signatures in GitHub Environment Protection rules from:
+  1. Designated Lead Maintainer / CODEOWNER.
+  2. Enterprise Security Operations (SecOps) Representative.
+
+---
+
+# 19. Infrastructure as Code (IaC)
+- **Framework**: Terraform / OpenTofu.
+- **Module Library**: Reusable corporate infrastructure modules stored in `idg-infra-modules`.
+- **State Security**: Remote backends backed by Google Cloud Storage with versioning, customer-managed encryption (KMS), and state locking.
+
+---
+
+# 20. Secrets and Configuration Management
+- **Secret Provider**: GCP Secret Manager & HashiCorp Vault.
+- **Runtime Injection**: Secrets are fetched dynamically during container startup or bound as secure environment variables by Cloud Run runtime controllers. Secrets MUST NEVER be committed to version control or written to disk in container filesystems.
+
+---
+
+# 21. Environment Variables Management
+- **Variable Documentation**: Every repository MUST maintain `.env.example` documenting all non-sensitive configuration keys.
+- **Variable Separation**:
+  - *Public Variables*: Prefixed with `VITE_` for client-side inclusion (e.g., `VITE_APP_TITLE`).
+  - *Private Variables*: Strictly server-side (e.g., `GEMINI_API_KEY`, `DATABASE_URL`).
+
+---
+
+# 22. Security Controls
+- **Shift-Left SAST**: CodeQL scans executed on every pull request. Code with High/Critical SAST findings cannot be merged.
+- **Container Hardening**: Images run as unprivileged non-root users (`USER node`, `uid: 10001`) with read-only root filesystems and explicit resource memory/CPU caps.
+- **Network Segmentation**: Internal services communicate over private VPC networks with Mutual TLS (mTLS) encryption.
+
+---
+
+# 23. Identity and Access Management (IAM)
+- **Role-Based Access Control (RBAC)**: Enforced via GCP IAM and GitHub Team memberships.
+- **Service Accounts**: Microservices execute under dedicated GCP Service Accounts granting least-privilege permissions (e.g., `sa-aigate-backend@idg-corp-prod.iam.gserviceaccount.com`).
+- **Human Access**: Direct SSH or console access to production containers is permanently disabled. Operational access occurs via GCP Teleport / Session Manager with multi-factor authentication (MFA).
+
+---
+
+# 24. SSL/TLS and Certificate Management
+- **TLS Version**: Strict enforcement of TLS 1.3 (TLS 1.2 minimum fallback).
+- **Certificate Authority**: Managed TLS certificates issued via Cloudflare Enterprise and Google Certificate Manager.
+- **Automated Renewal**: Zero-touch certificate lifecycle management with automated 90-day renewal cycles.
+
+---
+
+# 25. Monitoring and Observability
+- **Four Golden Signals**:
+  - *Latency*: p95 < 200ms web, < 100ms API.
+  - *Traffic*: Requests Per Second (RPS) metrics.
+  - *Errors*: HTTP 5xx error rate (< 0.05% target).
+  - *Saturation*: Memory and CPU container utilization metrics.
+- **Tooling Stack**: GCP Cloud Monitoring, Datadog APM, and Sentry Exception Tracking.
+
+---
+
+# 26. Logging and Audit Trails
+- **Centralized Logging**: Structured JSON logs (`timestamp`, `trace_id`, `severity`, `service`, `message`) emitted to `stdout` and ingested by GCP Cloud Logging.
+- **Audit Logging**: Admin actions, deployment triggers, and configuration modifications are permanently logged to immutable, tamper-evident audit buckets for ISO 27001 compliance.
+
+---
+
+# 27. Backup and Recovery
+- **Database Snapshots**: Cloud SQL automated daily full backups + continuous Write-Ahead Logging (WAL) enabling point-in-time recovery (PITR) to any second within the past 30 days.
+- **Storage Buckets**: Cross-region bucket replication for object media and document stores.
+- **Backup Verification**: Automated weekly restored-database integrity checks executed in sandbox environments.
+
+---
+
+# 28. Disaster Recovery (DR)
+- **Recovery Objectives**:
+  - **Recovery Point Objective (RPO)**: < 5 Minutes (Max allowable data loss).
+  - **Recovery Time Objective (RTO)**: < 15 Minutes (Max allowable outage time).
+- **Failover Automation**: Cloudflare Health Checks automatically pivot DNS traffic to secondary region (`me-central1`) if primary endpoints fail health probes for > 30 seconds.
+
+---
+
+# 29. Rollback Strategy
+- **Automated Rollback Trigger**: If canary deployment exhibits a 5xx error rate > 0.5% or a latency spike > 100% during the 15-minute observation window, Cloud Run automatically reverts 100% of traffic to the prior container revision.
+- **Manual Rollback**: Single-click gcloud command or GitHub Actions `Rollback Release` workflow execution (< 10 seconds total execution time).
+
+---
+
+# 30. Zero-Downtime Deployment
+- **Traffic Shifting**: Cloud Run revision-based traffic splitting allows seamless blue/green and canary transitions without dropping active TCP connections.
+- **Health Probing**: New revisions MUST pass 3 consecutive `/api/health` HTTP readiness probes before receiving live user traffic.
+
+---
+
+# 31. Database Migration Strategy
+- **Decoupled Migrations**: Database schema migrations (`drizzle-kit` / `prisma migrate`) MUST be backward-compatible with the currently running application revision.
+- **Execution Lifecycle**: Schema migrations execute as a pre-deployment step in the CD pipeline prior to shifting container traffic. Destructive schema operations (column drops) require a two-phase release cycle.
+
+---
+
+# 32. Dependency Management
+- **Lockfile Enforcement**: All npm deployments MUST use `npm ci` enforcing deterministic installation via `package-lock.json`.
+- **Automated Patching**: Dependabot and Renovate Bot submit weekly PRs for non-breaking security patches.
+
+---
+
+# 33. Supply Chain Security
+- **Software Bill of Materials (SBOM)**: Every release build generates an SPDX-compliant SBOM artifact detailing all transitive dependencies.
+- **Image Provenance**: Docker images are signed using Sigstore / Cosign, verifying image origin before deployment to production clusters.
+
+---
+
+# 34. Vulnerability Management
+- **SLA for Patching**:
+  - *Critical Vulnerabilities (CVSS 9.0-10.0)*: Patched and deployed within 24 hours.
+  - *High Vulnerabilities (CVSS 7.0-8.9)*: Patched and deployed within 72 hours.
+  - *Medium/Low Vulnerabilities*: Addressed in standard bi-weekly sprint releases.
+
+---
+
+# 35. Deployment Governance
+- **Ownership**: The Enterprise Platform Engineering team owns deployment pipelines, IaC modules, and release tooling.
+- **Compliance Audits**: Quarterly automated audits verify repository compliance against this specification.
+
+---
+
+# 36. Release Governance
+- **Semantic Versioning**: All releases follow SemVer `v[MAJOR].[MINOR].[PATCH]` rules.
+- **Changelog Generation**: Conventional Commits automatically generate trilingual release notes in `CHANGELOG.md`.
+
+---
+
+# 37. Change Management
+- **Standard Changes**: Pre-approved automated deployments merging to `develop` or `release/*`.
+- **Normal Changes**: Production releases requiring 2 CODEOWNERS approvals and a tracked GitHub Release Issue.
+- **Emergency Changes**: Hotfixes bypassing standard review cycles, requiring post-incident architectural review within 48 hours.
+
+---
+
+# 38. Incident Response Integration
+- **Alert Routing**: P1/P2 production alerts automatically route to PagerDuty and open a dedicated incident Slack war room (`#incident-[ID]`).
+- **Post-Mortem Policy**: Blameless post-mortems published within 72 hours for any P1 outage, documenting root causes and corrective action items.
+
+---
+
+# 39. Performance and Scalability
+- **Auto-Scaling Parameters**: Cloud Run containers scale automatically based on concurrency and CPU metrics:
+  - *Min Instances*: 2 (Production), 0 (Development).
+  - *Max Instances*: 100 (Default), expandable to 1,000 during high-traffic events.
+  - *Target Concurrency*: 80 concurrent requests per container instance.
+
+---
+
+# 40. High Availability
+- **Multi-Zone Fault Tolerance**: Application instances and database replicas span 3 distinct Availability Zones within the primary regional data center, enduring individual zone failures without degraded performance.
+
+---
+
+# 41. Multi-Region Readiness
+- **State Replication**: Multi-region active-passive topology with real-time database write-ahead log replication preparing IDG for future active-active multi-region deployment across Middle East cloud hubs.
+
+---
+
+# 42. Sovereign Infrastructure Readiness
+- **Air-Gapped Compatibility**: Architecture supports deployment to on-premise Iraqi sovereign datacenters running GKE Enterprise with localized data persistence, local HSM key management, and isolated network perimeters.
+
+---
+
+# 43. Product 001 Deployment Model
+- **Product Reference**: AI Gate Iraq (`aigate.iq`).
+- **Dedicated Resources**: Operates inside dedicated GCP project `idg-aigate-prod`, using isolated Cloud SQL instances, dedicated Vertex AI quota allocations, and custom domain SSL configurations (`aigate.iq`, `api.aigate.iq`).
+
+---
+
+# 44. Future Product Deployment Model
+- **Product Expansion (`Product 002` through `Product 500+`)**:
+- Future products inherit this specification automatically via standard Terraform project factory modules, receiving isolated cloud environments, standardized CI/CD pipelines, and unified IDG corporate governance.
+
+---
+
+# 45. Repository-to-Deployment Relationship
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ REPOSITORY-TO-DEPLOYMENT MAPPING MODEL                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+  idg-corp-website     ──► Deployed to Cloudflare Pages / Cloud Run (idg.global)
+  agi-platform-web     ──► Deployed to GCP Cloud Run (aigate.iq / app.aigate.iq)
+  agi-api-backend      ──► Deployed to GCP Cloud Run (api.aigate.iq)
+  idg-infra-terraform  ──► Executes GCP/Cloudflare Infrastructure Provisioning
+```
+
+---
+
+# 46. Deployment Lifecycle
+The lifecycle of a deployment comprises four distinct states:
+1. `PROVISIONING`: Building container artifacts and applying IaC configurations.
+2. `VERIFYING`: Executing automated health checks and canary smoke test validation.
+3. `ACTIVE`: Serving live production traffic under continuous APM monitoring.
+4. `SUPERSEDED` / `DEPRECATED`: Replaced by a newer revision; container instances terminated cleanly.
+
+---
+
+# 47. Compliance and Audit Requirements
+- **Standards Alignment**: ISO/IEC 27001:2022, SOC 2 Type II, and Iraqi Sovereign Data Residency Mandates.
+- **Audit Evidence**: GitHub Actions run logs, Terraform state snapshots, and GCP Cloud Trail logs retained for 7 years for regulatory compliance inspection.
+
+---
+
+# 48. Operational Responsibilities
+- **DevOps / Platform Engineering**: Pipeline maintenance, IaC modules, CDN configurations, DR failover scripts.
+- **Product Development Teams**: Application code quality, unit test coverage, database migration scripts.
+- **SecOps Team**: Security policy enforcement, SAST gate oversight, secret key management.
+
+---
+
+# 49. Deployment Naming Standards
+- **Cloud Run Service Name**: `[ORG]-[PRODUCT]-[SERVICE]-[ENV]` (e.g., `idg-agi-backend-prod`).
+- **Container Artifact Tag**: `gcr.io/[PROJECT]/[SERVICE]:[GIT_SHA]` & `:v[MAJOR].[MINOR].[PATCH]`.
+- **Terraform Workspace**: `[PRODUCT]-[ENV]` (e.g., `aigate-prod`).
+
+---
+
+# 50. Deployment Documentation Requirements
+Every deployable repository MUST include a `/docs/DEPLOYMENT.md` runbook containing:
+- Environment variable documentation.
+- Build and container compilation instructions.
+- Manual rollback procedures.
+- Health check endpoints and alert response contact matrices.
+
+---
+
+# 51. Enterprise Deployment Checklist
+Prior to promoting any release to Production, the automated pipeline MUST confirm:
+- [x] All 9 CI/CD quality gates passed cleanly with zero errors.
+- [x] SAST CodeQL and Secret Scans report zero High/Critical vulnerabilities.
+- [x] Unit and integration test suites achieved > 85% code coverage.
+- [x] Trilingual i18n bundle verification passed for English, Arabic, and Kurdish.
+- [x] Database migrations verified for backward-compatibility.
+- [x] 2 CODEOWNER digital signatures recorded on the production PR.
+- [x] Pre-deployment canary health checks confirmed successful.
+
+---
+
+# 52. Future Deployment Evolution
+1. **Short-Term (2026)**: Transition all microservices to serverless GCP Cloud Run with automated canary traffic splitting.
+2. **Medium-Term (2027)**: Deploy active-active multi-region cloud mesh across Middle East cloud zones (`me-central1` & `me-west1`).
+3. **Long-Term (2028+)**: Establish hybrid cloud connection with Iraqi sovereign air-gapped datacenters for government enterprise products.
+
+---
+
+# 53. Document Control / Revision History
+
+| Version | Date | Author / Title | Description of Changes | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Sandbox** | Local engineer prototyping and experimental service testing. | `localhost` / `*.sandbox.idg.internal` | Local Docker container or synthetic mock | On-demand local execution |
-| **Development (`dev`)** | Continuous integration of `feature/*` branches. | `dev.idg.global` / `dev.aigate.iq` | Shared development database with sanitized data | Push to `develop` branch |
-| **Testing (`test`)** | Automated execution of automated integration test suites. | `test.idg.internal` | Ephemeral test database created per test run | Pull Request to `develop` |
-| **QA / UAT (`qa`)** | Manual business acceptance, accessibility, and RTL validation. | `qa.idg.global` / `qa.aigate.iq` | Staging replica with anonymized sample records | Release candidate branch creation |
-| **Staging (`stage`)** | Production-identical validation, load testing, security audits. | `stage.idg.global` / `stage.aigate.iq` | Read-only replica or staging DB instance | Pull Request to `main` |
-| **Production (`prod`)** | Live multi-region sovereign business & application traffic. | `idg.global` / `aigate.iq` | High-availability multi-zone primary database cluster | Tagged merge to `main` branch |
-| **Disaster Recovery (`dr`)** | Active-passive failover standby in secondary geographic region. | `dr.idg.global` / `dr.aigate.iq` | Asynchronous read-replica with auto-failover | Automated failover trigger |
-
----
-
-# 3. Cloud Infrastructure Architecture
-
-The IDG cloud architecture combines edge compute networks, containerized Cloud Run / Kubernetes runtimes, managed serverless backends, and sovereign private cloud nodes into a resilient hybrid multi-cloud mesh.
-
-```
-                         [ USER TRAFFIC ]
-                                │
-                                ▼
-                   ┌──────────────────────────┐
-                   │   Cloudflare Enterprise  │
-                   │ (Anycast DNS / WAF / CDN)│
-                   └────────────┬─────────────┘
-                                │
-             ┌──────────────────┴──────────────────┐
-             │                                     │
-             ▼                                     ▼
-  ┌──────────────────────┐             ┌──────────────────────┐
-  │ Google Cloud Platform│             │ Firebase Sovereign   │
-  │  (Serverless / GCP)  │             │   (Data & Auth)      │
-  │                      │             │                      │
-  │ • Cloud Run (Node)   │             │ • Firestore Database │
-  │ • Cloud SQL (Postgres│             │ • Firebase Auth      │
-  │ • Vertex AI / Gemini │             │ • Cloud Storage      │
-  └──────────────────────┘             └──────────────────────┘
-```
-
-## 3.1 Primary Infrastructure Providers
-
-1. **Cloudflare Enterprise (Edge Layer)**: Handles global Anycast DNS resolution, Web Application Firewall (WAF) rule enforcement, DDoS mitigation, TLS 1.3 termination, Brotli compression, and static asset caching via edge workers.
-2. **Google Cloud Platform (GCP) (Compute & AI Layer)**:
-   - **GCP Cloud Run**: Containerized execution engine hosting API microservices, SSR web servers, and backend workers. Provides scale-to-zero efficiency and sub-second auto-scaling up to 1,000+ instances.
-   - **GCP Cloud SQL**: Fully managed PostgreSQL relational database instances with high-availability regional failover and automated daily backups.
-   - **Vertex AI / Gemini API Gateway**: Managed enterprise endpoints for Gemini AI model inference, RAG embeddings, and multi-agent orchestration.
-3. **Firebase Enterprise (Identity & Persistent Storage Layer)**: Provides sovereign authentication management (Firebase Auth), real-time document persistence (Firestore), and secure object storage (Firebase Storage).
-4. **Future Sovereign Kubernetes (GKE / On-Prem Sovereign Cloud)**: Dedicated private Kubernetes cluster infrastructure deployed within Iraqi sovereign datacenters for government workloads requiring air-gapped data isolation.
-
----
-
-# 4. End-to-End Automated Deployment Pipeline
-
-The IDG deployment pipeline automates the progression of code from a local developer environment to live production instances without manual intervention, governed by automated quality and security gates.
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ IDG AUTOMATED CI/CD DEPLOYMENT PIPELINE STAGES                          │
-└─────────────────────────────────────────────────────────────────────────┘
-  [1. Local Commit] ──► [2. GitHub PR] ──► [3. CI Build & Test]
-                                                  │
-                                                  ▼
-  [6. Prod Deploy]  ◄── [5. Security Scan] ◄── [4. Artifact Build]
-         │
-         ▼
-  [7. Health Check] ──► [8. Traffic Shift] ──► [9. APM Monitoring]
-```
-
-## 4.1 Detailed Pipeline Execution Stages
-
-1. **Developer Workstation**: Code authored locally, formatted via Prettier, linted via ESLint, and verified via local unit tests before committing.
-2. **Version Control Integration (Git)**: Push to feature branch triggers automated pre-push gitleaks scan and Conventional Commit syntax validation.
-3. **Pull Request Automation**: Creating a PR to `develop` or `main` automatically launches GitHub Actions workflow matrix.
-4. **Continuous Integration (CI)**:
-   - TypeScript type-checking (`tsc --noEmit`).
-   - Unit and integration test execution with coverage enforcement (>85%).
-   - Bi-directional i18n translation validation.
-5. **Automated Security Scanning (DevSecOps)**:
-   - Static Application Security Testing (SAST) via CodeQL.
-   - Dependency vulnerability scanning via Snyk / Dependabot.
-   - Container Image Vulnerability Scanning via Trivy / GCP Artifact Registry Analysis.
-6. **Container & Artifact Compilation**: Docker container image built using multi-stage Dockerfiles, tagged with git commit SHA and semantic version, and pushed to GCP Artifact Registry.
-7. **Staging Verification**: Automated deployment to Staging environment followed by Playwright E2E smoke test suite execution.
-8. **Production Progressive Release**: Immutable container deployed to Cloud Run or GKE cluster using traffic splitting (Canary 10% -> 50% -> 100%).
-9. **Automated Rollback & Monitoring**: Real-time error rate and latency monitoring via Datadog / Cloud Monitoring. If 5xx error rates exceed 0.5% during canary rollout, traffic automatically reverts to previous container revision in under 5 seconds.
-
----
-
-# 5. Infrastructure Layer Architecture Specifications
-
-IDG infrastructure is organized into ten distinct operational layers:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ IDG TEN-LAYER INFRASTRUCTURE ARCHITECTURE                               │
-└─────────────────────────────────────────────────────────────────────────┘
-   Layer 1: Global Anycast DNS & Edge Network (Cloudflare Enterprise)
-   Layer 2: Web Application Firewall (WAF) & DDoS Mitigation Layer
-   Layer 3: Edge Content Delivery Network (CDN) & Static Asset Caching
-   Layer 4: API Management & Ingress Gateway (Cloud Run / NGINX)
-   Layer 5: Compute & Serverless Microservices (Node.js / Express / Docker)
-   Layer 6: Persistence & Relational Databases (Cloud SQL / Firestore)
-   Layer 7: Enterprise Identity & OAuth Provider (Firebase Auth / OIDC)
-   Layer 8: AI & Vertex Engine Services (Gemini 1.5 Pro / Flash APIs)
-   Layer 9: Observability, Logging & Telemetry (Cloud Logging / Datadog)
-   Layer 10: Secrets Management & KMS (GCP Secret Manager / HashiCorp Vault)
-```
-
----
-
-# 6. Infrastructure Topography & Network Diagram (ASCII)
-
-```
-                            +--------------------------+
-                            |     Global Internet      |
-                            +------------+-------------+
-                                         |
-                                         v
-                            +--------------------------+
-                            |   Cloudflare Edge CDN    |
-                            | Anycast DNS / TLS 1.3 /  |
-                            | WAF / DDoS Mitigation    |
-                            +------------+-------------+
-                                         |
-               +-------------------------+-------------------------+
-               | (Static Web Assets)                               | (API & Dynamic Traffic)
-               v                                                   v
-+------------------------------+                  +------------------------------+
-| Cloudflare Pages / Hosting   |                  | GCP Cloud Run Ingress        |
-| Static Assets, HTML, JS, CSS |                  | Reverse Proxy & TLS Handler  |
-+------------------------------+                  +--------------+---------------+
-                                                                 |
-                                                                 v
-                                                  +------------------------------+
-                                                  | Node.js Express API Server   |
-                                                  | Port 3000 Container          |
-                                                  +--------------+---------------+
-                                                                 |
-         +-------------------------------------------------------+-------------------------------------------------------+
-         |                                                       |                                                       |
-         v                                                       v                                                       v
-+--------------------------------+              +--------------------------------+              +--------------------------------+
-| GCP Cloud SQL (PostgreSQL)     |              | Firebase Firestore & Auth      |              | GCP Vertex AI Gateway          |
-| Multi-AZ Primary + Read Replica|              | Document DB & User Storage     |              | Gemini Model APIs & Agents     |
-+--------------------------------+              +--------------------------------+              +--------------------------------+
-```
-
----
-
-# 7. High Availability, Backup & Disaster Recovery Strategy
-
-## 7.1 High Availability (HA) Target Parameters
-- **Target Uptime SLA**: **99.95%** availability across all public and customer-facing endpoints (maximum allowable unplanned downtime: 21.9 minutes per month).
-- **Multi-Zone Redundancy**: All Cloud Run compute containers and Cloud SQL database instances span a minimum of three distinct GCP Availability Zones within the primary regional location (`europe-west2` / `me-central1`).
-
-## 7.2 Backup Frequency & Retention Matrix
-
-| Infrastructure Asset | Backup Mechanism | Backup Frequency | RPO Target (Max Data Loss) | RTO Target (Max Recovery Time) | Retention Window |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Cloud SQL (PostgreSQL)** | Automated WAL Point-in-Time | Continuous WAL + Daily Snapshot | < 5 Minutes | < 15 Minutes | 30 Days Continuous |
-| **Firestore Document DB** | GCP Managed Export to GCS | Every 6 Hours | < 6 Hours | < 30 Minutes | 90 Days Rolling |
-| **Firebase Storage Objects** | Multi-Region Bucket Replication | Real-time Synchronous | < 1 Second | < 5 Minutes | Indefinite / Policy-Based |
-| **Terraform IaC State** | Versioned GCS Bucket with Object Locking | Upon every `terraform apply` | 0 Seconds (Versioned) | < 5 Minutes | Permanent Version History |
-
-## 7.3 Disaster Recovery (DR) Protocols
-In the event of a catastrophic regional cloud failure, automated failover DNS policies redirect traffic to the secondary passive region in under 60 seconds:
-1. Cloudflare health check detects primary region unresponsiveness (3 consecutive failed health probes over 15 seconds).
-2. Cloudflare Anycast DNS updates origin IP routing to secondary DR region (`me-central1` or designated secondary cloud zone).
-3. Cloud SQL standby read-replica promotes to primary write-capable database instance via automated GCP failover controller.
-4. SRE on-call team receives PagerDuty high-priority notification and opens Incident Command War Room.
-
----
-
-# 8. Infrastructure Security & Secrets Governance
-
-## 8.1 Zero-Trust Network Architecture
-1. **No Public Database Access**: Cloud SQL instances operate strictly inside private VPC networks with public IP access disabled. All server connections traverse Private Service Connect (PSC) tunnels.
-2. **Container Non-Root Execution**: Docker containers run as unprivileged non-root service users (`USER node` / `uid 10001`). Root container execution is strictly forbidden.
-3. **Mutual TLS (mTLS) Internal Communication**: Service-to-service internal calls enforce mTLS encryption with automated certificate rotation.
-
-## 8.2 Secrets Management Policy
-- **GCP Secret Manager**: All API keys, database credentials, OAuth client secrets, and private keys MUST be injected into container runtimes at launch from GCP Secret Manager via environment variable bindings.
-- **Strict Ban on Hardcoded Credentials**: Source code repositories MUST NOT contain hardcoded secrets or environment file defaults. Continuous CI/CD secret scanning automatically revokes any exposed credentials.
-
----
-
-# 9. Domain Routing & Network Topography
-
-Domain routing across IDG digital properties follows a strict regional hierarchy managed via Cloudflare Anycast DNS:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ IDG ENTERPRISE DOMAIN ROUTING MAP                                       │
-└─────────────────────────────────────────────────────────────────────────┘
-  ├── idg.global                  # Corporate Holding Main Portal
-  ├── www.idg.global              # CNAME -> idg.global
-  ├── api.idg.global              # Holding Central API Gateway
-  ├── docs.idg.global             # Enterprise Architecture Documentation Portal
-  ├── aigate.iq                   # Product 001 (AI Gate Iraq) Primary Portal
-  ├── www.aigate.iq               # CNAME -> aigate.iq
-  ├── api.aigate.iq               # Product 001 Microservices API Engine
-  ├── app.aigate.iq               # Customer Web Application Dashboard
-  ├── gov.aigate.iq               # Sovereign Government Exchange Portal
-  └── dev.aigate.iq               # Non-Production Staging & Integration Node
-```
-
----
-
-# 10. Observability, Monitoring & Incident Management
-
-IDG enforces the **Four Golden Signals** of SRE monitoring across all deployment targets:
-
-1. **Latency**: Time required to service a request (Target: < 200ms p95 for web pages; < 100ms p95 for API endpoints).
-2. **Traffic**: Volume of demand placed on system endpoints (Requests Per Second - RPS).
-3. **Errors**: Rate of requests that fail with 5xx or unhandled 4xx status codes (Target: < 0.05% total request volume).
-4. **Saturation**: Utilization depth of constrained system resources (CPU % utilization, Memory MB, DB Connection pool depth).
-
-## 10.1 Monitoring & Alerting Matrix
-
-| Alert Level | Trigger Condition | Notification Channel | Response SLA | Action Required |
-| :--- | :--- | :--- | :--- | :--- |
-| **P1 - Critical** | Service outage (>2% error rate) or DB failover | PagerDuty SMS + Call to On-Call SRE | < 5 Minutes | Immediate War Room creation & active triage |
-| **P2 - Major** | Increased latency (p95 > 1000ms for 5m) | Slack `#alerts-critical` + PagerDuty | < 15 Minutes | Investigate resource scaling & connection pools |
-| **P3 - Minor** | Non-critical background worker queue delay | Slack `#alerts-warning` | < 2 Hours | Review logs & queue worker capacity |
-| **P4 - Info** | Deployment completed or backup snapshot created | Datadog Event Feed / Audit Log | N/A | Informational logging only |
-
----
-
-# 11. Progressive Release Strategies & Rollback Controls
-
-Production releases MUST utilize one of three approved deployment strategies:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ IDG PRODUCTION RELEASE STRATEGIES                                       │
-└─────────────────────────────────────────────────────────────────────────┘
-  1. Canary Deployment   (10% -> 25% -> 50% -> 100% Traffic Progression)
-  2. Blue/Green Deployment(Instant Switching between Parallel Environments)
-  3. Emergency Hotfix    (Rapid Automated Patch Pipeline with Post-Audit)
-```
-
-## 11.1 Canary Release Progression Rules
-1. **Initial Deployment**: New revision deployed alongside existing revision receiving **10% of live production traffic**.
-2. **Automated Analysis Window**: System monitors error rates, latency spikes, and APM metrics for 15 minutes.
-3. **Traffic Increments**: If metric baselines remain healthy, traffic shifts automatically to **25%**, then **50%**, then **100%** over a 60-minute window.
-4. **Automated Rollback**: Any 5xx error rate anomaly (> 0.5%) triggers an instant, zero-downtime traffic reversion to the previous stable revision revision in < 5 seconds.
-
----
-
-# 12. Multilingual & RTL Deployment Considerations
-
-The deployment infrastructure natively supports trilingual content delivery across English (`en`), Arabic (`ar`), and Kurdish Sorani (`ckb`):
-
-1. **Edge Localization Routing**: Cloudflare Edge Workers analyze incoming HTTP `Accept-Language` headers and geographic IP locations to route requests to appropriate localized static caches.
-2. **Font & Asset Pre-rendering**: Trilingual web fonts (Noto Sans Arabic, Plus Jakarta Sans) are pre-loaded and cached at Cloudflare edge nodes with `Cache-Control: public, max-age=31536000, immutable` headers to eliminate layout shifts (CLS) on low-bandwidth networks.
-3. **RTL Cache Key Isolation**: Edge caches maintain separate cache keys for LTR (`dir="ltr"`) and RTL (`dir="rtl"`) rendered HTML views to prevent cross-language layout bleed.
-
----
-
-# 13. Infrastructure Governance & FinOps Controls
-
-1. **Automated Cost Anomaly Detection**: GCP Billing alerts trigger automated Slack notifications if daily infrastructure expenditure exceeds projected budget thresholds by > 15%.
-2. **Auto-Scaling Resource Limits**: Cloud Run services enforce strict `max-instances` caps to prevent runaway scaling during DDoS attacks or viral traffic spikes.
-3. **Resource Tagging Standard**: Every cloud resource MUST be tagged with mandatory metadata attributes:
-   `environment` (`prod` | `stage` | `dev`), `product` (`idg-corp` | `aigate` | `p002`), `owner` (`infra-team`), `cost-center` (`eng-001`).
-
----
-
-# 14. Document Control & Compliance Summary
+| **v1.0.0** | 2026-08-07 | IDG Enterprise Architecture Board | Initial publication of Enterprise Deployment Architecture Specification | Approved |
+| **v1.1.0** | 2026-08-07 | Principal Cloud Architect | Expansion to 53-section production specification covering multi-cloud, DR & trilingual standards | Approved |
 
 - **Document Identifier**: IDG-SPEC-DEPLOY-2026-V1
-- **Current Version**: 1.0.0
-- **Document Owner**: IDG Enterprise Infrastructure & Platform Architecture Board
-- **Approved By**: Chief Technology Officer & Principal DevOps Architect
-- **ISO / Regulatory Alignment**: ISO/IEC 27001:2022 (Control A.8.9 Configuration Management) & SOC 2 Type II
-- **Status**: Production Approved
+- **Owner**: IDG Enterprise Infrastructure & Platform Architecture Board
+- **Classification**: Enterprise Restricted
 - **Review Cycle**: Annual mandatory audit
-- **Repository Location**: `/technical/deployment.md`
+- **Location**: `/technical/deployment.md`
 
 ---
 # End of Document

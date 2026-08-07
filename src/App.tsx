@@ -151,20 +151,59 @@ const REPO_SECTIONS = [
 ];
 
 const DEPLOY_SECTIONS = [
-  "01. Deployment Philosophy & Core Principles",
-  "02. Environment Strategy & Isolation Matrix",
-  "03. Cloud Infrastructure Architecture",
-  "04. End-to-End Automated Deployment Pipeline",
-  "05. Infrastructure Layer Architecture (10 Layers)",
-  "06. Infrastructure Topography & ASCII Network Map",
-  "07. High Availability, Backup & Disaster Recovery",
-  "08. Infrastructure Security & Secrets Governance",
-  "09. Domain Routing & Network Topography",
-  "10. Observability, Monitoring & Golden Signals",
-  "11. Progressive Release Strategies & Rollbacks",
-  "12. Multilingual & RTL Deployment",
-  "13. Infrastructure Governance & FinOps",
-  "14. Document Control & Compliance Summary"
+  "01. Document Control",
+  "02. Purpose and Scope",
+  "03. Deployment Architecture Principles",
+  "04. IDG Enterprise Deployment Model",
+  "05. Environment Architecture (7 Isolation Tiers)",
+  "06. Application Deployment Architecture",
+  "07. Frontend Deployment & Trilingual Bundles",
+  "08. Backend Deployment & Node/Express Runtimes",
+  "09. API Deployment & Cloud Run Ingress",
+  "10. Database & Persistent Data Deployment",
+  "11. Cloud Infrastructure Deployment (GCP)",
+  "12. CDN & Edge Deployment (Cloudflare)",
+  "13. DNS & Domain Deployment (Anycast)",
+  "14. CI/CD Architecture & Automated Workflows",
+  "15. GitHub Actions Deployment Pipelines",
+  "16. Build & Release Process (OCI Containers)",
+  "17. Branch-to-Environment Mapping",
+  "18. Deployment Approval Model & Protection",
+  "19. Infrastructure as Code (IaC Terraform)",
+  "20. Secrets & Configuration Management",
+  "21. Environment Variables Management",
+  "22. Security Controls & Shift-Left SAST",
+  "23. Identity & Access Management (IAM)",
+  "24. SSL/TLS & Certificate Management",
+  "25. Monitoring & Observability (Golden Signals)",
+  "26. Logging & Audit Trails (ISO 27001)",
+  "27. Backup & Recovery (Point-In-Time)",
+  "28. Disaster Recovery (DR RPO/RTO)",
+  "29. Rollback Strategy & Auto-Reversion",
+  "30. Zero-Downtime Deployment (Canary)",
+  "31. Database Migration Strategy (Drizzle)",
+  "32. Dependency Management & Lockfiles",
+  "33. Supply Chain Security & SBOM",
+  "34. Vulnerability Management (CVSS SLA)",
+  "35. Deployment Governance & Engineering",
+  "36. Release Governance & Semantic Versioning",
+  "37. Change Management & Emergency Hotfixes",
+  "38. Incident Response Integration & War Rooms",
+  "39. Performance & Auto-Scaling Strategy",
+  "40. High Availability & Multi-AZ Topology",
+  "41. Multi-Region Readiness (Active-Passive)",
+  "42. Sovereign Infrastructure Readiness (Air-Gapped)",
+  "43. Product 001 Deployment Model (AI Gate)",
+  "44. Future Product Deployment Model (P002-P500+)",
+  "45. Repository-to-Deployment Relationship",
+  "46. Deployment Lifecycle (4 Runtime States)",
+  "47. Compliance & Audit Requirements (7-Yr Logs)",
+  "48. Operational Responsibilities Matrix",
+  "49. Deployment Naming Standards",
+  "50. Deployment Documentation Runbooks",
+  "51. Enterprise Deployment Checklist",
+  "52. Future Deployment Evolution (2026-2028+)",
+  "53. Document Control & Revision History"
 ];
 
 export default function App() {
@@ -373,7 +412,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : 'Deployment Architecture (14 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : 'Deployment Architecture (53 Sec)'}
             </p>
           </div>
 
