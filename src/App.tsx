@@ -17,7 +17,8 @@ import {
   Zap,
   CheckCircle2,
   ExternalLink,
-  Globe
+  Globe,
+  Palette
 } from 'lucide-react';
 
 const IA_SECTIONS = [
@@ -95,8 +96,21 @@ const SEO_SECTIONS = [
   "10. SEO Governance & Audit Workflow"
 ];
 
+const DS_SECTIONS = [
+  "01. Executive Overview & Philosophy",
+  "02. Enterprise Design Principles",
+  "03. Atomic Design Architecture",
+  "04. Design Token System",
+  "05. Color Architecture & Palettes",
+  "06. Typography & Multilingual Pairing",
+  "07. Spacing System & Grid Specs",
+  "08. Component Specifications (24 Cats)",
+  "09. Responsive Breakpoints & Accessibility",
+  "10. Theme System & RTL Mirroring"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo'>('seo');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds'>('ds');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -107,7 +121,9 @@ export default function App() {
     ? 'website/navigation-architecture.md' 
     : activeDoc === 'cts'
     ? 'website/content-strategy.md'
-    : 'seo/seo-architecture.md';
+    : activeDoc === 'seo'
+    ? 'seo/seo-architecture.md'
+    : 'design-system/design-tokens.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -115,7 +131,9 @@ export default function App() {
     ? 'IDG-SPEC-NAV-2026-V1' 
     : activeDoc === 'cts'
     ? 'IDG-SPEC-CTS-2026-V1'
-    : 'IDG-SPEC-SEO-2026-V1';
+    : activeDoc === 'seo'
+    ? 'IDG-SPEC-SEO-2026-V1'
+    : 'IDG-SPEC-DS-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -123,7 +141,9 @@ export default function App() {
     ? NAV_SECTIONS 
     : activeDoc === 'cts'
     ? CTS_SECTIONS
-    : SEO_SECTIONS;
+    : activeDoc === 'seo'
+    ? SEO_SECTIONS
+    : DS_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -164,10 +184,10 @@ export default function App() {
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
           <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-4 gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <div className="grid grid-cols-5 gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
-              className={`px-1.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
+              className={`px-1 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
                 activeDoc === 'ia'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -178,7 +198,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('nav'); setActiveSection(null); }}
-              className={`px-1.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
+              className={`px-1 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
                 activeDoc === 'nav'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -189,7 +209,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('cts'); setActiveSection(null); }}
-              className={`px-1.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
+              className={`px-1 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
                 activeDoc === 'cts'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -200,7 +220,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('seo'); setActiveSection(null); }}
-              className={`px-1.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
+              className={`px-1 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
                 activeDoc === 'seo'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -209,6 +229,17 @@ export default function App() {
               <Search className="w-3 h-3" />
               <span>SEO</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('ds'); setActiveSection(null); }}
+              className={`px-1 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-1 ${
+                activeDoc === 'ds'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Palette className="w-3 h-3" />
+              <span>Design</span>
+            </button>
           </div>
         </div>
 
@@ -216,7 +247,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : 'SEO Architecture (10 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : 'Design Tokens (10 Sec)'}
             </p>
           </div>
 
@@ -341,7 +372,9 @@ export default function App() {
                         ? 'IDG Enterprise Navigation Architecture Specification'
                         : activeDoc === 'cts'
                         ? 'IDG Enterprise Website Content & Localization Strategy'
-                        : 'IDG Enterprise SEO & Discoverability Architecture Specification'}
+                        : activeDoc === 'seo'
+                        ? 'IDG Enterprise SEO & Discoverability Architecture Specification'
+                        : 'IDG Enterprise Design System Architecture Specification'}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -350,12 +383,14 @@ export default function App() {
                         ? 'Governing global navigation, primary header hierarchies, product navigation models, mega menus, accessibility, and 10-year scalability.'
                         : activeDoc === 'cts'
                         ? 'Governing corporate tone, trilingual localization (English, Arabic, Kurdish Sorani), page specifications, SEO rules, and translation governance.'
-                        : 'Governing enterprise search infrastructure, JSON-LD schemas, multilingual hreflang routing, robots AI directives, and Answer Engine Optimization (AEO/GEO).'}
+                        : activeDoc === 'seo'
+                        ? 'Governing enterprise search infrastructure, JSON-LD schemas, multilingual hreflang routing, robots AI directives, and Answer Engine Optimization (AEO/GEO).'
+                        : 'Governing design tokens, trilingual typography, atomic UI component specifications, WCAG 2.2 AA accessibility, and RTL layout mirroring.'}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : '510+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : '480+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -465,7 +500,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Localized URLs, hreflang annotations, JSON-LD Corporation schema, WCAG 2.2 AA screen readers, 5-stage lifecycle workflow.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'seo' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise SEO &amp; Discoverability Architecture Specification</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-SEO-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -478,6 +513,21 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Complete JSON-LD graph specs: Corporation, SoftwareApplication, TechArticle, BreadcrumbList, WebSite.</p>
                       <p className="text-slate-200 font-semibold mt-2">7. ROBOTS DIRECTIVES &amp; AI CRAWLERS</p>
                       <p className="text-slate-400 text-[11px]">Explicit permissions for Googlebot, GPTBot, ClaudeBot, PerplexityBot, llms.txt index file, Brotli compression &amp; CWV budget.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Design System Architecture Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DS-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. EXECUTIVE OVERVIEW &amp; DESIGN PHILOSOPHY</p>
+                      <p className="text-slate-400 text-[11px]">Sovereign Authority &amp; Institutional Trust, Deterministic Clarity, Inclusive Bi-Directional Equity.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. DESIGN TOKEN SYSTEM</p>
+                      <p className="text-slate-400 text-[11px]">Primitive &amp; Semantic tokens for Colors, Typography, Spacing, Radii, Elevation, Motion, and Borders.</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. MULTILINGUAL TYPOGRAPHY &amp; RTL MIRRORING</p>
+                      <p className="text-slate-400 text-[11px]">Trilingual pairing (English, Arabic, Kurdish Sorani), CSS logical properties, line-height compensation (+15%).</p>
+                      <p className="text-slate-200 font-semibold mt-2">4. COMPONENT CATEGORIES &amp; ACCESSIBILITY</p>
+                      <p className="text-slate-400 text-[11px]">24 Enterprise Component Categories, WCAG 2.2 AA compliance, Focus ring standards, Multi-brand themes.</p>
                     </div>
                   </div>
                 )}
