@@ -20,7 +20,8 @@ import {
   Globe,
   Palette,
   Component,
-  Server
+  Server,
+  Code2
 } from 'lucide-react';
 
 const IA_SECTIONS = [
@@ -206,8 +207,49 @@ const DEPLOY_SECTIONS = [
   "53. Document Control & Revision History"
 ];
 
+const API_SECTIONS = [
+  "01. Executive Summary",
+  "02. API Architecture Principles",
+  "03. Enterprise API Strategy",
+  "04. API Portfolio Architecture (Tiers 1-4)",
+  "05. API Classification & Lifecycle",
+  "06. API Governance & Ownership Model",
+  "07. API Naming Standards (kebab-case)",
+  "08. REST API Standards & Trilingual Headers",
+  "09. GraphQL Governance & Depth Limits",
+  "10. Event-Driven APIs & CloudEvents",
+  "11. Webhooks & HMAC Signatures",
+  "12. Internal, Public & Partner APIs",
+  "13. Government Integration APIs & HSM",
+  "14. AI Gate Iraq API Architecture (Product 001)",
+  "15. Future Product API Model (P002-P500+)",
+  "16. API Gateway Architecture (Cloudflare/Cloud Run)",
+  "17. API Versioning (/v1/) & Compatibility",
+  "18. Authentication, OAuth 2.0 & OIDC",
+  "19. API Keys & Service-to-Service Auth",
+  "20. Rate Limiting, Throttling & Idempotency",
+  "21. Request Validation & Response Envelopes",
+  "22. Trilingual Canonical Error Model",
+  "23. HTTP Status Code Standards",
+  "24. Caching, Pagination, Filtering & Sorting",
+  "25. Observability, Logging & Distributed Tracing",
+  "26. API Security & OWASP Top 10 Mitigation",
+  "27. Secrets Management & PII Encryption",
+  "28. API Testing, Contract Testing (Pact)",
+  "29. CI/CD API Quality Gates (Spectral Lint)",
+  "30. OpenAPI 3.1 Standards & Developer Portal",
+  "31. SDK Strategy & Auto-Generation",
+  "32. API Deprecation (180-Day) & Retirement",
+  "33. SLA/SLO Standards & High Availability",
+  "34. Multi-Region API Architecture & DR",
+  "35. Cloudflare, Firebase, Cloud Run, SQL Integration",
+  "36. Enterprise API Repository & Governance",
+  "37. Enterprise API KPIs & Decision Records",
+  "38. Document Control & Revision History"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy'>('deploy');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy' | 'api'>('api');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -228,7 +270,9 @@ export default function App() {
     ? 'governance/document-governance.md'
     : activeDoc === 'repo'
     ? 'technical/repository-structure.md'
-    : 'technical/deployment.md';
+    : activeDoc === 'deploy'
+    ? 'technical/deployment.md'
+    : 'technical/api-architecture.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -246,7 +290,9 @@ export default function App() {
     ? 'IDG-SPEC-DOCGOV-2026-V1'
     : activeDoc === 'repo'
     ? 'IDG-SPEC-REPO-2026-V1'
-    : 'IDG-SPEC-DEPLOY-2026-V1';
+    : activeDoc === 'deploy'
+    ? 'IDG-SPEC-DEPLOY-2026-V1'
+    : 'IDG-SPEC-API-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -264,7 +310,9 @@ export default function App() {
     ? DOCGOV_SECTIONS
     : activeDoc === 'repo'
     ? REPO_SECTIONS
-    : DEPLOY_SECTIONS;
+    : activeDoc === 'deploy'
+    ? DEPLOY_SECTIONS
+    : API_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -305,7 +353,7 @@ export default function App() {
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
           <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-9 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <div className="grid grid-cols-10 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
               className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
@@ -405,6 +453,17 @@ export default function App() {
               <Server className="w-3 h-3 shrink-0" />
               <span>Ops</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('api'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'api'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Code2 className="w-3 h-3 shrink-0" />
+              <span>API</span>
+            </button>
           </div>
         </div>
 
@@ -412,7 +471,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : 'Deployment Architecture (53 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : activeDoc === 'deploy' ? 'Deployment Architecture (53 Sec)' : 'API Architecture (38 Sec)'}
             </p>
           </div>
 
@@ -547,7 +606,9 @@ export default function App() {
                         ? 'IDG Enterprise Documentation Governance Specification'
                         : activeDoc === 'repo'
                         ? 'IDG Enterprise Repository Structure Standard'
-                        : 'IDG Enterprise Deployment & Infrastructure Standard'}
+                        : activeDoc === 'deploy'
+                        ? 'IDG Enterprise Deployment & Infrastructure Standard'
+                        : 'IDG Enterprise API Architecture Specification'}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -566,12 +627,14 @@ export default function App() {
                         ? 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'
                         : activeDoc === 'repo'
                         ? 'Governing 15 repository taxonomies, folder layouts, GitFlow branching, Conventional Commits, CODEOWNERS, and CI/CD pipelines.'
-                        : 'Governing 7 environments, Cloudflare / GCP / Firebase cloud mesh, DevSecOps pipelines, 10 infrastructure layers, and HA / DR topologies.'}
+                        : activeDoc === 'deploy'
+                        ? 'Governing 7 environments, Cloudflare / GCP / Firebase cloud mesh, DevSecOps pipelines, 10 infrastructure layers, and HA / DR topologies.'
+                        : 'Governing OpenAPI 3.1 contracts, zero-trust security, OAuth 2.0/OIDC, trilingual error models, rate limiting, and 75 enterprise API sections.'}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : '450+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : activeDoc === 'deploy' ? '450+ Lines' : '500+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -750,7 +813,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Conventional Commits, Branch protection (2 approvals, CODEOWNERS, SAST + Secret scanning), 5-state lifecycle, 1000+ repo scalability.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'deploy' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Deployment &amp; Infrastructure Standard</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DEPLOY-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -761,6 +824,19 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">9-Stage DevSecOps Pipeline (CodeQL SAST, secret scanning, trivy container audit, canary progressive deployment, automated rollback).</p>
                       <p className="text-slate-200 font-semibold mt-2">3. HIGH AVAILABILITY, SECURITY &amp; OBSERVABILITY</p>
                       <p className="text-slate-400 text-[11px]">99.95% HA SLA, &lt;5min RPO / &lt;15min RTO, zero-trust network isolation, GCP Secret Manager, 4 Golden Signals APM, and FinOps governance.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise API Architecture Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-API-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. CONTRACT-FIRST &amp; OPENAPI CANONICAL SOURCE</p>
+                      <p className="text-slate-400 text-[11px]">OpenAPI 3.1 contracts as single source of truth, automated Prism mock servers, SDK generation, and Spectral linting.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. ZERO-TRUST SECURITY &amp; OAUTH 2.0 / OIDC</p>
+                      <p className="text-slate-400 text-[11px]">Bearer JWTs, fine-grained scopes, mTLS inter-service auth, HMAC webhook signatures, Cloudflare WAF rate limiting.</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. TRILINGUAL ERROR MODEL &amp; LOCALIZATION</p>
+                      <p className="text-slate-400 text-[11px]">Canonical error response envelope featuring localized messages (en-US, ar-IQ, ckb-IQ), request_id tracing, and docs URL references.</p>
                     </div>
                   </div>
                 )}
