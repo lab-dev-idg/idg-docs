@@ -123,8 +123,21 @@ const CMP_SECTIONS = [
   "10. Internationalization & Bi-Directional Logic"
 ];
 
+const DOCGOV_SECTIONS = [
+  "01. Documentation Vision & Principles",
+  "02. Enterprise Hierarchy Pyramid",
+  "03. Repository Structure & Folder Specs",
+  "04. File & Folder Naming Conventions",
+  "05. Markdown Syntax & Frontmatter Metadata",
+  "06. Document Lifecycle (6 States)",
+  "07. Review & Approval Workflow Matrix",
+  "08. Security Classification Framework",
+  "09. Multilingual Translation & Governance",
+  "10. AI Policy & ISO 9001 Alignment"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp'>('cmp');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov'>('docgov');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -139,7 +152,9 @@ export default function App() {
     ? 'seo/seo-architecture.md'
     : activeDoc === 'ds'
     ? 'design-system/design-tokens.md'
-    : 'design-system/components.md';
+    : activeDoc === 'cmp'
+    ? 'design-system/components.md'
+    : 'governance/document-governance.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -151,7 +166,9 @@ export default function App() {
     ? 'IDG-SPEC-SEO-2026-V1'
     : activeDoc === 'ds'
     ? 'IDG-SPEC-DS-2026-V1'
-    : 'IDG-SPEC-CMP-2026-V1';
+    : activeDoc === 'cmp'
+    ? 'IDG-SPEC-CMP-2026-V1'
+    : 'IDG-SPEC-DOCGOV-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -163,7 +180,9 @@ export default function App() {
     ? SEO_SECTIONS
     : activeDoc === 'ds'
     ? DS_SECTIONS
-    : CMP_SECTIONS;
+    : activeDoc === 'cmp'
+    ? CMP_SECTIONS
+    : DOCGOV_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -204,10 +223,10 @@ export default function App() {
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
           <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-6 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <div className="grid grid-cols-7 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'ia'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -218,7 +237,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('nav'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'nav'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -229,7 +248,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('cts'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'cts'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -240,7 +259,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('seo'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'seo'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -251,7 +270,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('ds'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'ds'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -262,7 +281,7 @@ export default function App() {
             </button>
             <button
               onClick={() => { setActiveDoc('cmp'); setActiveSection(null); }}
-              className={`px-0.5 py-1.5 rounded text-[10px] font-medium transition flex items-center justify-center gap-0.5 ${
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
                 activeDoc === 'cmp'
                   ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -271,6 +290,17 @@ export default function App() {
               <Component className="w-3 h-3 shrink-0" />
               <span>Comp</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('docgov'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'docgov'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <BookOpen className="w-3 h-3 shrink-0" />
+              <span>Gov</span>
+            </button>
           </div>
         </div>
 
@@ -278,7 +308,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : 'Component Library (10 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : 'Doc Governance (40 Sec)'}
             </p>
           </div>
 
@@ -407,7 +437,9 @@ export default function App() {
                         ? 'IDG Enterprise SEO & Discoverability Architecture Specification'
                         : activeDoc === 'ds'
                         ? 'IDG Enterprise Design System Architecture Specification'
-                        : 'IDG Enterprise Component Library Architecture Specification'}
+                        : activeDoc === 'cmp'
+                        ? 'IDG Enterprise Component Library Architecture Specification'
+                        : 'IDG Enterprise Documentation Governance Specification'}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -420,12 +452,14 @@ export default function App() {
                         ? 'Governing enterprise search infrastructure, JSON-LD schemas, multilingual hreflang routing, robots AI directives, and Answer Engine Optimization (AEO/GEO).'
                         : activeDoc === 'ds'
                         ? 'Governing design tokens, trilingual typography, atomic UI component specifications, WCAG 2.2 AA accessibility, and RTL layout mirroring.'
-                        : 'Governing atomic component hierarchy, Tier 1-4 UI specs, bi-directional logic, WCAG 2.2 AA accessibility, and developer rules.'}
+                        : activeDoc === 'cmp'
+                        ? 'Governing atomic component hierarchy, Tier 1-4 UI specs, bi-directional logic, WCAG 2.2 AA accessibility, and developer rules.'
+                        : 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : '460+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : '230+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -565,7 +599,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">24 Enterprise Component Categories, WCAG 2.2 AA compliance, Focus ring standards, Multi-brand themes.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'cmp' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Component Library Architecture Specification</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-CMP-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -576,6 +610,19 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">HeaderNav, SidebarRail, Action Buttons, TextField, DropdownSelect, DataTable, MetricCard, ModalDialog, ToastMessage, ClearanceBadge, PermissionGate.</p>
                       <p className="text-slate-200 font-semibold mt-2">3. ACCESSIBILITY &amp; LOGICAL CSS</p>
                       <p className="text-slate-400 text-[11px]">WCAG 2.2 AA Compliance, Focus ring standards, Keyboard traversal, CSS logical properties mapping (margin-inline-start, inset-inline-end).</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Documentation Governance Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DOCGOV-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. DOCUMENTATION VISION &amp; PRINCIPLES</p>
+                      <p className="text-slate-400 text-[11px]">Single Source of Truth (SSOT), Asynchronous Knowledge Authority, Trilingual Sovereignty by Design (EN/AR/CKB), Machine &amp; AI Processability.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. REPOSITORY TAXONOMY &amp; FILE NAMING</p>
+                      <p className="text-slate-400 text-[11px]">Structured hierarchy: Tier 0 Constitution -&gt; Tier 1 Specs -&gt; Tier 2 Product -&gt; Tier 3 SOPs. Deterministic kebab-case identifiers.</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. LIFECYCLE &amp; ISO 9001 ALIGNMENT</p>
+                      <p className="text-slate-400 text-[11px]">6 Lifecycle States (Draft, Review, Approved, Published, Deprecated, Archived), Review matrix, AI policy, and ISO 9001 audit readiness.</p>
                     </div>
                   </div>
                 )}
