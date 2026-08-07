@@ -1,0 +1,6 @@
+{
+  "name": "IDG Enterprise Information Architecture Specification",
+  "description": "Enterprise Information Architecture Specification for IDG and Product 001 (AI Gate Iraq)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
