@@ -136,8 +136,21 @@ const DOCGOV_SECTIONS = [
   "10. AI Policy & ISO 9001 Alignment"
 ];
 
+const REPO_SECTIONS = [
+  "01. Executive Summary & Vision",
+  "02. Constitutional Repository Principles",
+  "03. Enterprise Taxonomies & Categories",
+  "04. Standardized Repository Naming Conventions",
+  "05. Internal Directory & Folder Standards",
+  "06. Branching Strategy & GitFlow Rules",
+  "07. Commit Message Standards (Conventional)",
+  "08. GitHub Enterprise Security Controls",
+  "09. Mandatory Baseline Repository Files",
+  "10. Automated CI/CD Pipelines & Lifecycles"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov'>('docgov');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo'>('repo');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -154,7 +167,9 @@ export default function App() {
     ? 'design-system/design-tokens.md'
     : activeDoc === 'cmp'
     ? 'design-system/components.md'
-    : 'governance/document-governance.md';
+    : activeDoc === 'docgov'
+    ? 'governance/document-governance.md'
+    : 'technical/repository-structure.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -168,7 +183,9 @@ export default function App() {
     ? 'IDG-SPEC-DS-2026-V1'
     : activeDoc === 'cmp'
     ? 'IDG-SPEC-CMP-2026-V1'
-    : 'IDG-SPEC-DOCGOV-2026-V1';
+    : activeDoc === 'docgov'
+    ? 'IDG-SPEC-DOCGOV-2026-V1'
+    : 'IDG-SPEC-REPO-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -182,7 +199,9 @@ export default function App() {
     ? DS_SECTIONS
     : activeDoc === 'cmp'
     ? CMP_SECTIONS
-    : DOCGOV_SECTIONS;
+    : activeDoc === 'docgov'
+    ? DOCGOV_SECTIONS
+    : REPO_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -223,7 +242,7 @@ export default function App() {
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
           <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-7 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <div className="grid grid-cols-8 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
               className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
@@ -301,6 +320,17 @@ export default function App() {
               <BookOpen className="w-3 h-3 shrink-0" />
               <span>Gov</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('repo'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'repo'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <GitBranch className="w-3 h-3 shrink-0" />
+              <span>Repo</span>
+            </button>
           </div>
         </div>
 
@@ -308,7 +338,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : 'Doc Governance (40 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : 'Repository Architecture (14 Sec)'}
             </p>
           </div>
 
@@ -439,7 +469,9 @@ export default function App() {
                         ? 'IDG Enterprise Design System Architecture Specification'
                         : activeDoc === 'cmp'
                         ? 'IDG Enterprise Component Library Architecture Specification'
-                        : 'IDG Enterprise Documentation Governance Specification'}
+                        : activeDoc === 'docgov'
+                        ? 'IDG Enterprise Documentation Governance Specification'
+                        : 'IDG Enterprise Repository Structure Standard'}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -454,12 +486,14 @@ export default function App() {
                         ? 'Governing design tokens, trilingual typography, atomic UI component specifications, WCAG 2.2 AA accessibility, and RTL layout mirroring.'
                         : activeDoc === 'cmp'
                         ? 'Governing atomic component hierarchy, Tier 1-4 UI specs, bi-directional logic, WCAG 2.2 AA accessibility, and developer rules.'
-                        : 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'}
+                        : activeDoc === 'docgov'
+                        ? 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'
+                        : 'Governing 15 repository taxonomies, folder layouts, GitFlow branching, Conventional Commits, CODEOWNERS, and CI/CD pipelines.'}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : '230+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : '300+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -612,7 +646,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">WCAG 2.2 AA Compliance, Focus ring standards, Keyboard traversal, CSS logical properties mapping (margin-inline-start, inset-inline-end).</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'docgov' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Documentation Governance Specification</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DOCGOV-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -623,6 +657,19 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Structured hierarchy: Tier 0 Constitution -&gt; Tier 1 Specs -&gt; Tier 2 Product -&gt; Tier 3 SOPs. Deterministic kebab-case identifiers.</p>
                       <p className="text-slate-200 font-semibold mt-2">3. LIFECYCLE &amp; ISO 9001 ALIGNMENT</p>
                       <p className="text-slate-400 text-[11px]">6 Lifecycle States (Draft, Review, Approved, Published, Deprecated, Archived), Review matrix, AI policy, and ISO 9001 audit readiness.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Repository Structure Standard</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-REPO-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. REPOSITORY TAXONOMIES &amp; NAMING</p>
+                      <p className="text-slate-400 text-[11px]">15 Domain Categories (idg-corp-*, agi-*, idg-infra-*, idg-ds-*, idg-api-*, idg-sdk-*). Deterministic kebab-case conventions.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. DIRECTORY STANDARDS &amp; BRANCHING</p>
+                      <p className="text-slate-400 text-[11px]">Standard Polyrepo vs Monorepo topologies. GitFlow branching (main, develop, release/*, hotfix/*, feature/*, security/*).</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. COMMIT &amp; GITHUB ENTERPRISE GOVERNANCE</p>
+                      <p className="text-slate-400 text-[11px]">Conventional Commits, Branch protection (2 approvals, CODEOWNERS, SAST + Secret scanning), 5-state lifecycle, 1000+ repo scalability.</p>
                     </div>
                   </div>
                 )}
