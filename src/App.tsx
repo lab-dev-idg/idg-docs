@@ -19,7 +19,8 @@ import {
   ExternalLink,
   Globe,
   Palette,
-  Component
+  Component,
+  Server
 } from 'lucide-react';
 
 const IA_SECTIONS = [
@@ -149,8 +150,25 @@ const REPO_SECTIONS = [
   "10. Automated CI/CD Pipelines & Lifecycles"
 ];
 
+const DEPLOY_SECTIONS = [
+  "01. Deployment Philosophy & Core Principles",
+  "02. Environment Strategy & Isolation Matrix",
+  "03. Cloud Infrastructure Architecture",
+  "04. End-to-End Automated Deployment Pipeline",
+  "05. Infrastructure Layer Architecture (10 Layers)",
+  "06. Infrastructure Topography & ASCII Network Map",
+  "07. High Availability, Backup & Disaster Recovery",
+  "08. Infrastructure Security & Secrets Governance",
+  "09. Domain Routing & Network Topography",
+  "10. Observability, Monitoring & Golden Signals",
+  "11. Progressive Release Strategies & Rollbacks",
+  "12. Multilingual & RTL Deployment",
+  "13. Infrastructure Governance & FinOps",
+  "14. Document Control & Compliance Summary"
+];
+
 export default function App() {
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo'>('repo');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy'>('deploy');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -169,7 +187,9 @@ export default function App() {
     ? 'design-system/components.md'
     : activeDoc === 'docgov'
     ? 'governance/document-governance.md'
-    : 'technical/repository-structure.md';
+    : activeDoc === 'repo'
+    ? 'technical/repository-structure.md'
+    : 'technical/deployment.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -185,7 +205,9 @@ export default function App() {
     ? 'IDG-SPEC-CMP-2026-V1'
     : activeDoc === 'docgov'
     ? 'IDG-SPEC-DOCGOV-2026-V1'
-    : 'IDG-SPEC-REPO-2026-V1';
+    : activeDoc === 'repo'
+    ? 'IDG-SPEC-REPO-2026-V1'
+    : 'IDG-SPEC-DEPLOY-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -201,7 +223,9 @@ export default function App() {
     ? CMP_SECTIONS
     : activeDoc === 'docgov'
     ? DOCGOV_SECTIONS
-    : REPO_SECTIONS;
+    : activeDoc === 'repo'
+    ? REPO_SECTIONS
+    : DEPLOY_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -242,7 +266,7 @@ export default function App() {
         {/* Spec File Selector Tabs */}
         <div className="p-3 border-b border-slate-800 bg-slate-950/50">
           <p className="px-2 mb-2 text-slate-500 font-bold uppercase tracking-widest text-[9px]">Active Architecture Spec</p>
-          <div className="grid grid-cols-8 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+          <div className="grid grid-cols-9 gap-0.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
             <button
               onClick={() => { setActiveDoc('ia'); setActiveSection(null); }}
               className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
@@ -331,6 +355,17 @@ export default function App() {
               <GitBranch className="w-3 h-3 shrink-0" />
               <span>Repo</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('deploy'); setActiveSection(null); }}
+              className={`px-0.5 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-0.5 ${
+                activeDoc === 'deploy'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Server className="w-3 h-3 shrink-0" />
+              <span>Ops</span>
+            </button>
           </div>
         </div>
 
@@ -338,7 +373,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : 'Repository Architecture (14 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : 'Deployment Architecture (14 Sec)'}
             </p>
           </div>
 
@@ -471,7 +506,9 @@ export default function App() {
                         ? 'IDG Enterprise Component Library Architecture Specification'
                         : activeDoc === 'docgov'
                         ? 'IDG Enterprise Documentation Governance Specification'
-                        : 'IDG Enterprise Repository Structure Standard'}
+                        : activeDoc === 'repo'
+                        ? 'IDG Enterprise Repository Structure Standard'
+                        : 'IDG Enterprise Deployment & Infrastructure Standard'}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -488,12 +525,14 @@ export default function App() {
                         ? 'Governing atomic component hierarchy, Tier 1-4 UI specs, bi-directional logic, WCAG 2.2 AA accessibility, and developer rules.'
                         : activeDoc === 'docgov'
                         ? 'Governing corporate & product documentation, repository hierarchies, 6-stage lifecycles, ISO 9001 quality alignment, and trilingual translation pipelines.'
-                        : 'Governing 15 repository taxonomies, folder layouts, GitFlow branching, Conventional Commits, CODEOWNERS, and CI/CD pipelines.'}
+                        : activeDoc === 'repo'
+                        ? 'Governing 15 repository taxonomies, folder layouts, GitFlow branching, Conventional Commits, CODEOWNERS, and CI/CD pipelines.'
+                        : 'Governing 7 environments, Cloudflare / GCP / Firebase cloud mesh, DevSecOps pipelines, 10 infrastructure layers, and HA / DR topologies.'}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : '300+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : '450+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -659,7 +698,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">6 Lifecycle States (Draft, Review, Approved, Published, Deprecated, Archived), Review matrix, AI policy, and ISO 9001 audit readiness.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'repo' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Repository Structure Standard</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-REPO-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -670,6 +709,19 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Standard Polyrepo vs Monorepo topologies. GitFlow branching (main, develop, release/*, hotfix/*, feature/*, security/*).</p>
                       <p className="text-slate-200 font-semibold mt-2">3. COMMIT &amp; GITHUB ENTERPRISE GOVERNANCE</p>
                       <p className="text-slate-400 text-[11px]">Conventional Commits, Branch protection (2 approvals, CODEOWNERS, SAST + Secret scanning), 5-state lifecycle, 1000+ repo scalability.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Deployment &amp; Infrastructure Standard</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DEPLOY-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. ENVIRONMENT STRATEGY &amp; CLOUD ARCHITECTURE</p>
+                      <p className="text-slate-400 text-[11px]">7 Environments (Sandbox, Dev, Test, QA, Staging, Prod, DR). Multi-cloud mesh: Cloudflare Enterprise, GCP Cloud Run / Cloud SQL, Firebase Auth/Firestore.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. CI/CD PIPELINE &amp; INFRASTRUCTURE LAYERS</p>
+                      <p className="text-slate-400 text-[11px]">9-Stage DevSecOps Pipeline (CodeQL SAST, secret scanning, trivy container audit, canary progressive deployment, automated rollback).</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. HIGH AVAILABILITY, SECURITY &amp; OBSERVABILITY</p>
+                      <p className="text-slate-400 text-[11px]">99.95% HA SLA, &lt;5min RPO / &lt;15min RTO, zero-trust network isolation, GCP Secret Manager, 4 Golden Signals APM, and FinOps governance.</p>
                     </div>
                   </div>
                 )}
