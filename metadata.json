@@ -1,6 +1,6 @@
 {
-  "name": "IDG Enterprise Information Architecture Specification",
-  "description": "Enterprise Information Architecture Specification for IDG and Product 001 (AI Gate Iraq)",
+  "name": "سیستەمی بەڵگەنامە و ئەڕکیتێکچەری IDG",
+  "description": "Enterprise Documentation & System Architecture for Iraq Digital Gateway (IDG) and Product 001 (AI Gate Iraq) with native Kurdish Sorani (ckb-IQ) localization.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
