@@ -8,7 +8,7 @@ export const arIQ = {
   'nav.copy_spec': 'نسخ المواصفة الكاملة',
   'nav.copied': 'تم النسخ إلى الحافظة!',
   'nav.status_approved': 'معتمد',
-  'nav.patch_badge': 'التحديث 015',
+  'nav.patch_badge': 'التحديث 016',
   'nav.classification': 'معيار مؤسسي',
   
   // Spec Tabs
@@ -24,6 +24,7 @@ export const arIQ = {
   'spec.api': 'واجهات البرمجة',
   'spec.knowledge': 'المعرفة',
   'spec.localization': 'التوطين واللغات',
+  'spec.security': 'الأمان والامتثال',
 
   // Spec Titles
   'title.ia': 'معيار معمارية المعلومات لبوابة العراق الرقمية',
@@ -38,6 +39,7 @@ export const arIQ = {
   'title.api': 'مواصفات معمارية واجهات التطبيقات البرمجية (API)',
   'title.knowledge': 'مواصفات معمارية إدارة المعرفة للمؤسسة',
   'title.localization': 'مواصفات معمارية التوطين وإدارة اللغات للمؤسسة',
+  'title.security': 'مواصفات معمارية الأمان السيبراني والامتثال للمؤسسة',
 
   // Spec Subtitles / Descriptions
   'desc.ia': 'يحكم 27 مجالأ لتصنيف المعلومات، ومخططات العناوين، وقواعد التنقل متعدد اللغات، وهياكل الكيانات.',
@@ -52,6 +54,7 @@ export const arIQ = {
   'desc.api': 'يحكم عقود OpenAPI 3.1، وأمان عدم الثقة، وOAuth 2.0/OIDC، ونماذج الأخطاء ثلاثية اللغات، و143 قسماً.',
   'desc.knowledge': 'يحكم تصنيف المعرفة المؤسسية، والتكافؤ ثلاثي اللغات (EN/AR/CKB)، وخصائص CSS المنطقية، ومخطط المعرفة.',
   'desc.localization': 'يحكم معمارية اللغات ثلاثية اللغات (EN/AR/CKB)، ومعايير BCP 47، والانعكاس المنطقي LTR/RTL، وحفظ الخيارات.',
+  'desc.security': 'يحكم معمارية انعدام الثقة (Zero Trust)، وإدارة الهويات IAM/PAM، والتشفير، وأمان الذكاء الاصطناعي، وDevSecOps، والتعافي RTO < 15m و RPO < 5m.',
 
   // Language Selector
   'language.select': 'اللغة',

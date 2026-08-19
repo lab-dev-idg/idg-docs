@@ -8,7 +8,7 @@ export const enUS = {
   'nav.copy_spec': 'Copy Complete Specification',
   'nav.copied': 'Copied to Clipboard!',
   'nav.status_approved': 'APPROVED',
-  'nav.patch_badge': 'PATCH 015',
+  'nav.patch_badge': 'PATCH 016',
   'nav.classification': 'ENTERPRISE STANDARD',
   
   // Spec Tabs
@@ -24,6 +24,7 @@ export const enUS = {
   'spec.api': 'API',
   'spec.knowledge': 'Knowledge',
   'spec.localization': 'Localization',
+  'spec.security': 'Security',
 
   // Spec Titles
   'title.ia': 'IDG Information Architecture Standard',
@@ -38,6 +39,7 @@ export const enUS = {
   'title.api': 'IDG Enterprise API Architecture Specification',
   'title.knowledge': 'IDG Enterprise Knowledge Architecture Specification',
   'title.localization': 'IDG Enterprise Localization & Language Architecture Specification',
+  'title.security': 'IDG Enterprise Security & Compliance Architecture Specification',
 
   // Spec Subtitles / Descriptions
   'desc.ia': 'Governing 27 taxonomy domains, URL schemas, multilingual navigation rules, and content entity hierarchies for IDG Digital Ecosystem.',
@@ -52,6 +54,7 @@ export const enUS = {
   'desc.api': 'Governing OpenAPI 3.1 contracts, zero-trust security, OAuth 2.0/OIDC, trilingual error models, rate limiting, and 143 enterprise API sections.',
   'desc.knowledge': 'Governing enterprise knowledge taxonomy, trilingual parity (EN/AR/CKB), CSS logical properties, search indexing, knowledge graph, and 14 document domains.',
   'desc.localization': 'Governing trilingual language architecture (EN/AR/CKB), BCP 47 locale standards, LTR/RTL logical mirroring, and i18n dictionary persistence.',
+  'desc.security': 'Governing Zero Trust Architecture, IAM, PAM, Cryptographic Standards, DevSecOps, AI/LLM Prompt Defense, SIEM Telemetry, SEV-1-4 SLAs, RTO < 15m, RPO < 5m, and ISO/NIST Alignment.',
 
   // Language Selector
   'language.select': 'Language',
