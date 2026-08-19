@@ -24,7 +24,8 @@ import {
   Server,
   Code2,
   Library,
-  Languages
+  Languages,
+  Database
 } from 'lucide-react';
 
 const IA_SECTIONS = [
@@ -416,9 +417,32 @@ const SECURITY_SECTIONS = [
   "17. Document Control & Revision History"
 ];
 
+const DATA_SECTIONS = [
+  "01. Document Control & Metadata",
+  "02. Executive Summary",
+  "03. Purpose & Objectives",
+  "04. Core Data Architecture Principles",
+  "05. Current, Standard & Future States",
+  "06. Enterprise Data Domains & Taxonomy (18 Domains)",
+  "07. Trilingual Data Architecture & Invariance",
+  "08. Data Lifecycle & Lineage (9 Stages)",
+  "09. Data Security, Privacy & Cryptography",
+  "10. AI & LLM Data Governance (AI Gate Iraq)",
+  "11. Data Quality, Validation & Contracts",
+  "12. Integration, Streaming & CDC Pipelines",
+  "13. Cloud Storage & Database Standards (PG16/Firestore)",
+  "14. Resilience, Backup & Disaster Recovery (RTO/RPO)",
+  "15. Governance Operating Model & RACI Matrix",
+  "16. Architecture Decision Records (ADRs)",
+  "17. Implementation Roadmap (2026-2027)",
+  "18. Compliance & Audit Lineage (ISO 27001)",
+  "19. Performance, Scalability & FinOps",
+  "20. Document Control & Revision History"
+];
+
 export default function App() {
   const { locale, setLocale, t, isRTL } = useI18n();
-  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy' | 'api' | 'knowledge' | 'localization' | 'security'>('security');
+  const [activeDoc, setActiveDoc] = useState<'ia' | 'nav' | 'cts' | 'seo' | 'ds' | 'cmp' | 'docgov' | 'repo' | 'deploy' | 'api' | 'knowledge' | 'localization' | 'security' | 'data'>('data');
   const [copied, setCopied] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -447,7 +471,9 @@ export default function App() {
     ? 'governance/knowledge-architecture.md'
     : activeDoc === 'localization'
     ? 'governance/localization-architecture.md'
-    : 'governance/security-compliance-architecture.md';
+    : activeDoc === 'security'
+    ? 'governance/security-compliance-architecture.md'
+    : 'technical/data-architecture.md';
 
   const docId = activeDoc === 'ia' 
     ? 'IDG-SPEC-IA-2026-V1' 
@@ -473,7 +499,9 @@ export default function App() {
     ? 'IDG-SPEC-KNOWLEDGE-2026-V1'
     : activeDoc === 'localization'
     ? 'IDG-SPEC-LOCALIZATION-2026-V1'
-    : 'IDG-SPEC-SECURITY-2026-V1';
+    : activeDoc === 'security'
+    ? 'IDG-SPEC-SECURITY-2026-V1'
+    : 'IDG-SPEC-DATA-2026-V1';
 
   const sections = activeDoc === 'ia' 
     ? IA_SECTIONS 
@@ -499,7 +527,9 @@ export default function App() {
     ? KNOWLEDGE_SECTIONS
     : activeDoc === 'localization'
     ? LOCALIZATION_SECTIONS
-    : SECURITY_SECTIONS;
+    : activeDoc === 'security'
+    ? SECURITY_SECTIONS
+    : DATA_SECTIONS;
 
   const handleCopy = () => {
     fetch(`/${currentFile}`)
@@ -684,6 +714,17 @@ export default function App() {
               <ShieldCheck className="w-3 h-3 shrink-0" />
               <span>Sec</span>
             </button>
+            <button
+              onClick={() => { setActiveDoc('data'); setActiveSection(null); }}
+              className={`px-1 py-1.5 rounded text-[9px] font-medium transition flex items-center justify-center gap-1 ${
+                activeDoc === 'data'
+                  ? 'bg-indigo-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Database className="w-3 h-3 shrink-0" />
+              <span>Data</span>
+            </button>
           </div>
         </div>
 
@@ -691,7 +732,7 @@ export default function App() {
         <div className="flex-1 p-3 overflow-hidden flex flex-col text-[11px] leading-tight">
           <div className="flex items-center justify-between mb-2 px-2">
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
-              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : activeDoc === 'deploy' ? 'Deployment Architecture (53 Sec)' : activeDoc === 'api' ? 'API Architecture (143 Sec)' : activeDoc === 'knowledge' ? 'Knowledge Architecture (17 Sec)' : activeDoc === 'localization' ? 'Localization Architecture (17 Sec)' : 'Security & Compliance (17 Sec)'}
+              {activeDoc === 'ia' ? 'Information Architecture (27 Sec)' : activeDoc === 'nav' ? 'Navigation Architecture (14 Sec)' : activeDoc === 'cts' ? 'Content Strategy (12 Sec)' : activeDoc === 'seo' ? 'SEO Architecture (10 Sec)' : activeDoc === 'ds' ? 'Design Tokens (10 Sec)' : activeDoc === 'cmp' ? 'Component Library (10 Sec)' : activeDoc === 'docgov' ? 'Doc Governance (40 Sec)' : activeDoc === 'repo' ? 'Repository Architecture (14 Sec)' : activeDoc === 'deploy' ? 'Deployment Architecture (53 Sec)' : activeDoc === 'api' ? 'API Architecture (143 Sec)' : activeDoc === 'knowledge' ? 'Knowledge Architecture (17 Sec)' : activeDoc === 'localization' ? 'Localization Architecture (17 Sec)' : activeDoc === 'security' ? 'Security & Compliance (17 Sec)' : 'Data Architecture (20 Sec)'}
             </p>
           </div>
 
@@ -757,7 +798,7 @@ export default function App() {
               <span className="text-slate-900 font-semibold">{currentFile.split('/')[1]}</span>
             </div>
             <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-mono font-bold border border-indigo-200/80">
-              {activeDoc === 'ia' ? 'PATCH 003' : activeDoc === 'nav' ? 'PATCH 004' : activeDoc === 'cts' ? 'PATCH 005' : activeDoc === 'seo' ? 'PATCH 006' : activeDoc === 'ds' ? 'PATCH 007' : activeDoc === 'cmp' ? 'PATCH 008' : activeDoc === 'docgov' ? 'PATCH 009' : activeDoc === 'repo' ? 'PATCH 010' : activeDoc === 'deploy' ? 'PATCH 011' : activeDoc === 'api' ? 'PATCH 013' : activeDoc === 'knowledge' ? 'PATCH 014' : activeDoc === 'localization' ? 'PATCH 015' : 'PATCH 016'}
+              {activeDoc === 'ia' ? 'PATCH 003' : activeDoc === 'nav' ? 'PATCH 004' : activeDoc === 'cts' ? 'PATCH 005' : activeDoc === 'seo' ? 'PATCH 006' : activeDoc === 'ds' ? 'PATCH 007' : activeDoc === 'cmp' ? 'PATCH 008' : activeDoc === 'docgov' ? 'PATCH 009' : activeDoc === 'repo' ? 'PATCH 010' : activeDoc === 'deploy' ? 'PATCH 011' : activeDoc === 'api' ? 'PATCH 013' : activeDoc === 'knowledge' ? 'PATCH 014' : activeDoc === 'localization' ? 'PATCH 015' : activeDoc === 'security' ? 'PATCH 016' : 'PATCH 017'}
             </span>
             <span className="hidden sm:inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded text-[10px] font-mono font-bold border border-emerald-200/80">
               {t('nav.status_approved')}
@@ -872,7 +913,9 @@ export default function App() {
                         ? t('title.knowledge')
                         : activeDoc === 'localization'
                         ? t('title.localization')
-                        : t('title.security')}
+                        : activeDoc === 'security'
+                        ? t('title.security')
+                        : t('title.data')}
                     </h2>
                     <p className="text-xs text-slate-300 mt-1">
                       {activeDoc === 'ia'
@@ -899,12 +942,14 @@ export default function App() {
                         ? t('desc.knowledge')
                         : activeDoc === 'localization'
                         ? t('desc.localization')
-                        : t('desc.security')}
+                        : activeDoc === 'security'
+                        ? t('desc.security')
+                        : t('desc.data')}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2 bg-slate-800/80 p-2 rounded-lg border border-slate-700/60 text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : activeDoc === 'deploy' ? '450+ Lines' : activeDoc === 'api' ? '500+ Lines' : activeDoc === 'security' ? '600+ Lines' : '250+ Lines'}</span>
+                    <span>{activeDoc === 'ia' ? '436 Lines' : activeDoc === 'nav' ? '457 Lines' : activeDoc === 'cts' ? '410+ Lines' : activeDoc === 'seo' ? '510+ Lines' : activeDoc === 'ds' ? '480+ Lines' : activeDoc === 'cmp' ? '460+ Lines' : activeDoc === 'docgov' ? '230+ Lines' : activeDoc === 'repo' ? '300+ Lines' : activeDoc === 'deploy' ? '450+ Lines' : activeDoc === 'api' ? '500+ Lines' : activeDoc === 'security' ? '600+ Lines' : activeDoc === 'data' ? '550+ Lines' : '250+ Lines'}</span>
                   </div>
                 </div>
               </div>
@@ -1135,7 +1180,7 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">Zero hardcoded UI strings, ckb-IQ -&gt; ar-IQ -&gt; en-US fallback chain, untranslated technical canonical identifiers, and hreflang SEO architecture.</p>
                     </div>
                   </div>
-                ) : (
+                ) : activeDoc === 'security' ? (
                   <div className="space-y-3 text-slate-300">
                     <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Security &amp; Compliance Architecture Specification</p>
                     <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-SECURITY-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
@@ -1146,6 +1191,21 @@ export default function App() {
                       <p className="text-slate-400 text-[11px]">AES-256-GCM data-at-rest, TLS 1.3 in-transit, envelope encryption via GCP KMS / Cloud HSM, automated 90-day key rotation, and zero-plaintext storage.</p>
                       <p className="text-slate-200 font-semibold mt-2">3. AI GATE IRAQ LLM DEFENSE &amp; DEVSECOPS</p>
                       <p className="text-slate-400 text-[11px]">OWASP Top 10 for LLM defense (indirect prompt injection, model denial-of-service, data poisoning), automated SAST/DAST/SCA CI gates, and 24/7 SIEM detection.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-slate-300">
+                    <p className="text-indigo-400 font-bold"># Iraq Digital Gateway (IDG) Enterprise Data Architecture Specification</p>
+                    <p className="text-slate-400 italic">// Identifiers: IDG-SPEC-DATA-2026-V1 | Parent: IDG | Product 001: AI Gate Iraq</p>
+                    <div className="pl-3 border-l-2 border-indigo-500 space-y-2">
+                      <p className="text-slate-200 font-semibold">1. CORE DATA ARCHITECTURE PRINCIPLES</p>
+                      <p className="text-slate-400 text-[11px]">Parent Holding Supremacy, Data Mesh Domain Ownership, Trilingual Canonical Parity, Zero-Trust Cryptographic Security, Schema-First Contracts.</p>
+                      <p className="text-slate-200 font-semibold mt-2">2. ENTERPRISE DATA DOMAINS (18 DOMAINS)</p>
+                      <p className="text-slate-400 text-[11px]">18 Autonomous Data Domains across IDG Parent &amp; AI Gate Iraq (Core, Tenants, IAM, Billing, AI Models, Ingestion, Knowledge Graph, Compliance, etc.).</p>
+                      <p className="text-slate-200 font-semibold mt-2">3. AI &amp; LLM DATA GOVERNANCE (AI GATE IRAQ)</p>
+                      <p className="text-slate-400 text-[11px]">Strict prompt/completion logging isolation, embedding vector index lineage (HNSW / cosine distance), RAG document attribution, and zero-training telemetry guarantees.</p>
+                      <p className="text-slate-200 font-semibold mt-2">4. STORAGE, STREAMING &amp; DISASTER RECOVERY</p>
+                      <p className="text-slate-400 text-[11px]">PostgreSQL 16 Enterprise relational engine, Firestore document store, CDC streaming (Debezium/Kafka), &lt;5min RPO / &lt;15min RTO disaster recovery.</p>
                     </div>
                   </div>
                 )}

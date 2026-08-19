@@ -8,7 +8,7 @@ export const arIQ = {
   'nav.copy_spec': 'نسخ المواصفة الكاملة',
   'nav.copied': 'تم النسخ إلى الحافظة!',
   'nav.status_approved': 'معتمد',
-  'nav.patch_badge': 'التحديث 016',
+  'nav.patch_badge': 'التحديث 017',
   'nav.classification': 'معيار مؤسسي',
   
   // Spec Tabs
@@ -25,6 +25,7 @@ export const arIQ = {
   'spec.knowledge': 'المعرفة',
   'spec.localization': 'التوطين واللغات',
   'spec.security': 'الأمان والامتثال',
+  'spec.data': 'البيانات',
 
   // Spec Titles
   'title.ia': 'معيار معمارية المعلومات لبوابة العراق الرقمية',
@@ -40,6 +41,7 @@ export const arIQ = {
   'title.knowledge': 'مواصفات معمارية إدارة المعرفة للمؤسسة',
   'title.localization': 'مواصفات معمارية التوطين وإدارة اللغات للمؤسسة',
   'title.security': 'مواصفات معمارية الأمان السيبراني والامتثال للمؤسسة',
+  'title.data': 'مواصفات معمارية البيانات وإدارتها للمؤسسة',
 
   // Spec Subtitles / Descriptions
   'desc.ia': 'يحكم 27 مجالأ لتصنيف المعلومات، ومخططات العناوين، وقواعد التنقل متعدد اللغات، وهياكل الكيانات.',
@@ -55,6 +57,7 @@ export const arIQ = {
   'desc.knowledge': 'يحكم تصنيف المعرفة المؤسسية، والتكافؤ ثلاثي اللغات (EN/AR/CKB)، وخصائص CSS المنطقية، ومخطط المعرفة.',
   'desc.localization': 'يحكم معمارية اللغات ثلاثية اللغات (EN/AR/CKB)، ومعايير BCP 47، والانعكاس المنطقي LTR/RTL، وحفظ الخيارات.',
   'desc.security': 'يحكم معمارية انعدام الثقة (Zero Trust)، وإدارة الهويات IAM/PAM، والتشفير، وأمان الذكاء الاصطناعي، وDevSecOps، والتعافي RTO < 15m و RPO < 5m.',
+  'desc.data': 'يحكم 18 مجالاً للبيانات، وإدارة البيانات الرئيسية MDM، وعقود البيانات، وقواعد Cloud SQL PG16 / pgvector / Firestore، وحوكمة بيانات الذكاء الاصطناعي، والتعافي RTO < 15m و RPO < 1m.',
 
   // Language Selector
   'language.select': 'اللغة',
