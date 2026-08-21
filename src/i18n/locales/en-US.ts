@@ -8,6 +8,8 @@ export const enUS: Record<string, string> = {
   'nav.specifications': 'Specifications',
   'nav.specs_count': '14 Specs',
   'nav.active_spec': 'Active Architecture Spec',
+  'nav.open_menu': 'Open navigation menu',
+  'nav.close_menu': 'Close navigation menu',
   'nav.domains': 'Documentation Domains',
   'nav.search_placeholder': 'Search 1,200+ architecture sections, specifications, or codes...',
   'nav.filter_sections': 'Filter sections...',

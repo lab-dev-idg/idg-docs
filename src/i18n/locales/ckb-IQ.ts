@@ -8,6 +8,8 @@ export const ckbIQ: Record<string, string> = {
   'nav.specifications': 'تایبەتمەندییەکان',
   'nav.specs_count': '14 تایبەتمەندی',
   'nav.active_spec': 'تایبەتمەندی چالاک',
+  'nav.open_menu': 'کردنەوەی مینیۆی ڕێنوێنی',
+  'nav.close_menu': 'داخستنی مینیۆی ڕێنوێنی',
   'nav.domains': 'دۆمەینەکانی بەڵگەنامەکردن',
   'nav.search_placeholder': 'گەڕان لە زیاتر لە 1,200 بەش و بڕگەی تەلارسازی...',
   'nav.filter_sections': 'فلتەرکردنی بەشەکان...',

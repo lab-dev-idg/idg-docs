@@ -8,6 +8,8 @@ export const arIQ: Record<string, string> = {
   'nav.specifications': 'المواصفات والوثائق',
   'nav.specs_count': '14 مواصفة',
   'nav.active_spec': 'المواصفة النشطة',
+  'nav.open_menu': 'فتح قائمة التنقل',
+  'nav.close_menu': 'إغلاق قائمة التنقل',
   'nav.domains': 'نطاقات التوثيق',
   'nav.search_placeholder': 'البحث في أكثر من 1,200 قسم وبند معننون...',
   'nav.filter_sections': 'تصفية الأقسام...',
