@@ -61,19 +61,19 @@ export const SPEC_KEYS: SpecKey[] = [
 
 export const SPEC_REGISTRY: Record<SpecKey, SpecMeta> = {
   ia: { key: 'ia', id: 'IDG-SPEC-IA-2026-V1', patch: 'PATCH 003', file: 'website/information-architecture.md', lines: '436', icon: Layers, domain: 'domain.website' },
-  nav: { key: 'nav', id: 'IDG-SPEC-NAV-2026-V1', patch: 'PATCH 004', file: 'website/navigation-architecture.md', lines: '457', icon: Navigation, domain: 'domain.website' },
-  cts: { key: 'cts', id: 'IDG-SPEC-CTS-2026-V1', patch: 'PATCH 005', file: 'website/content-strategy.md', lines: '410+', icon: Globe, domain: 'domain.website' },
-  seo: { key: 'seo', id: 'IDG-SPEC-SEO-2026-V1', patch: 'PATCH 006', file: 'seo/seo-architecture.md', lines: '510+', icon: Search, domain: 'domain.seo' },
-  ds: { key: 'ds', id: 'IDG-SPEC-DS-2026-V1', patch: 'PATCH 007', file: 'design-system/design-tokens.md', lines: '480+', icon: Palette, domain: 'domain.design_system' },
-  cmp: { key: 'cmp', id: 'IDG-SPEC-CMP-2026-V1', patch: 'PATCH 008', file: 'design-system/components.md', lines: '460+', icon: Component, domain: 'domain.design_system' },
-  docgov: { key: 'docgov', id: 'IDG-SPEC-DOCGOV-2026-V1', patch: 'PATCH 009', file: 'governance/document-governance.md', lines: '230+', icon: BookOpen, domain: 'domain.governance' },
-  repo: { key: 'repo', id: 'IDG-SPEC-REPO-2026-V1', patch: 'PATCH 010', file: 'technical/repository-structure.md', lines: '300+', icon: GitBranch, domain: 'domain.technical' },
-  deploy: { key: 'deploy', id: 'IDG-SPEC-DEPLOY-2026-V1', patch: 'PATCH 011', file: 'technical/deployment.md', lines: '450+', icon: Server, domain: 'domain.technical' },
-  api: { key: 'api', id: 'IDG-SPEC-API-2026-V1', patch: 'PATCH 013', file: 'technical/api-architecture.md', lines: '500+', icon: Code2, domain: 'domain.technical' },
-  knowledge: { key: 'knowledge', id: 'IDG-SPEC-KNOWLEDGE-2026-V1', patch: 'PATCH 014', file: 'governance/knowledge-architecture.md', lines: '250+', icon: Library, domain: 'domain.governance' },
-  localization: { key: 'localization', id: 'IDG-SPEC-LOCALIZATION-2026-V1', patch: 'PATCH 015', file: 'governance/localization-architecture.md', lines: '250+', icon: Languages, domain: 'domain.governance' },
-  security: { key: 'security', id: 'IDG-SPEC-SECURITY-2026-V1', patch: 'PATCH 016', file: 'governance/security-compliance-architecture.md', lines: '600+', icon: ShieldCheck, domain: 'domain.governance' },
-  data: { key: 'data', id: 'IDG-SPEC-DATA-2026-V1', patch: 'PATCH 017', file: 'technical/data-architecture.md', lines: '550+', icon: Database, domain: 'domain.technical' },
+  nav: { key: 'nav', id: 'IDG-SPEC-NAV-2026-V1', patch: 'PATCH 004', file: 'website/navigation-architecture.md', lines: '456', icon: Navigation, domain: 'domain.website' },
+  cts: { key: 'cts', id: 'IDG-SPEC-CTS-2026-V1', patch: 'PATCH 005', file: 'website/content-strategy.md', lines: '313', icon: Globe, domain: 'domain.website' },
+  seo: { key: 'seo', id: 'IDG-SPEC-SEO-2026-V1', patch: 'PATCH 006', file: 'seo/seo-architecture.md', lines: '440', icon: Search, domain: 'domain.seo' },
+  ds: { key: 'ds', id: 'IDG-SPEC-DS-2026-V1', patch: 'PATCH 007', file: 'design-system/design-tokens.md', lines: '351', icon: Palette, domain: 'domain.design_system' },
+  cmp: { key: 'cmp', id: 'IDG-SPEC-CMP-2026-V1', patch: 'PATCH 008', file: 'design-system/components.md', lines: '306', icon: Component, domain: 'domain.design_system' },
+  docgov: { key: 'docgov', id: 'IDG-SPEC-DOCGOV-2026-V1', patch: 'PATCH 009', file: 'governance/document-governance.md', lines: '221', icon: BookOpen, domain: 'domain.governance' },
+  repo: { key: 'repo', id: 'IDG-SPEC-REPO-2026-V1', patch: 'PATCH 010', file: 'technical/repository-structure.md', lines: '386', icon: GitBranch, domain: 'domain.technical' },
+  deploy: { key: 'deploy', id: 'IDG-SPEC-DEPLOY-2026-V1', patch: 'PATCH 011', file: 'technical/deployment.md', lines: '473', icon: Server, domain: 'domain.technical' },
+  api: { key: 'api', id: 'IDG-SPEC-API-2026-V1', patch: 'PATCH 013', file: 'technical/api-architecture.md', lines: '885', icon: Code2, domain: 'domain.technical' },
+  knowledge: { key: 'knowledge', id: 'IDG-SPEC-KNOWLEDGE-2026-V1', patch: 'PATCH 014', file: 'governance/knowledge-architecture.md', lines: '291', icon: Library, domain: 'domain.governance' },
+  localization: { key: 'localization', id: 'IDG-SPEC-LOCALIZATION-2026-V1', patch: 'PATCH 015', file: 'governance/localization-architecture.md', lines: '420', icon: Languages, domain: 'domain.governance' },
+  security: { key: 'security', id: 'IDG-SPEC-SECURITY-2026-V1', patch: 'PATCH 016', file: 'governance/security-compliance-architecture.md', lines: '342', icon: ShieldCheck, domain: 'domain.governance' },
+  data: { key: 'data', id: 'IDG-SPEC-DATA-2026-V1', patch: 'PATCH 017', file: 'technical/data-architecture.md', lines: '548', icon: Database, domain: 'domain.technical' },
 };
 
 export const CKB_SECTIONS: Record<SpecKey, string[]> = {
